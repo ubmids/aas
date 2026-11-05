@@ -1,16 +1,56 @@
 # AAS
 
-AAS reads the data downloads people can already request from the services they use (Spotify, Google, YouTube, Reddit, X) and tries to say true things about the person behind them. It runs on the person's own machine. Nothing is uploaded, and every claim it makes is first scored on people the model never saw, against a plain baseline, before it is allowed to show up.
+Show me your digital world and I'll tell you who you are.
 
-The project has two halves. The TypeScript engine reads listening histories: which tracks you will skip, which artists you will play next, whether a new artist will stick, when you listen, and a handful of listening traits measured straight from your plays. The Python package asks the harder question of whether any of this, or your own writing, says something about personality, and it reports how well each reader does on kinds of data it was not trained on. Where the data cannot support a number, it refuses and says why.
+## What it is
 
-## What it found
+Every big app runs an algorithm that seems to know you. Spotify knows the song you'll want next, TikTok knows what will keep you scrolling. Those algorithms are built from your data, but you never get to see what they've worked out about you, or how sure they are.
+
+AAS turns that around. You download your own data from the services you use (Spotify, Google, YouTube, Reddit, X all let you request a copy), and AAS reads it on your own machine and tells you what it can honestly say about you. Nothing is uploaded.
+
+It's a research engine, not an app yet. The point of this first version was to find out which things can really be read from a person's data and which can't, and to build the reading so that it never claims more than it can back up.
+
+## The rule it follows
+
+Anyone can write a reading that sounds true. "You're loyal to the things you love, but you crave something new now and then" fits almost everybody, which is why horoscopes work. AAS is built to avoid that.
+
+So every reader in AAS has to earn the right to speak. Before it's allowed to say anything about you, it's tested on hundreds or thousands of people it never saw during training, and its accuracy is measured against a plain baseline such as guessing the average. When it does speak, it gives a value, a range it expects you to fall in, and the accuracy it reached in that test for your kind of data. When your data can't support an answer (too little of it, or a kind it was never shown to work on), it says so and explains why instead of guessing.
+
+## How it works
+
+1. Parsers read the export files each service gives you and turn them into one shared shape: things you wrote, things you played, things you watched, each with a time.
+2. Readers look at one kind of data each. The text readers read your writing, the music reader reads your listening history, and the listening engine models how you play music day to day.
+3. Each reader returns estimates: a value, a range, its tested accuracy, and a sentence explaining where the number came from.
+4. A fusion step combines readers that answer the same question, weighting each by its own tested accuracy.
+5. The profile puts it all together and lists what each reader said and what it declined to say.
+
+## What you get back
+
+Here is part of what it says for an invented test person (all the data in this example is made up, see `py/docs/example_profile.md` for the full output):
+
+```
+music  old_friends  83% of your plays went to artists who were already among your
+                    top 50 four to six months before. That's more than 99% of the
+                    304 ListenBrainz listeners we measured.
+music  dial_explore Explore against stay: -2.36, so you lean staying with old favourites.
+text   openness     not shown to work on this kind of writing, so no number is given.
+                    It has only been shown to work on essay-like long prose, which is
+                    22% of your words (at least 50% needed).
+```
+
+The listening lines are sharp and specific. The personality lines, for most people, are honest but weak, and the section below says why.
+
+## What it found so far
 
 Listening behaviour is very predictable from listening behaviour. Whether you will skip a track, whether a new artist will still be in your rotation a few weeks later, and how adventurous or loyal you are as a listener can all be read from a year of plays, and they hold up on held-out weeks. On 13 detailed Spotify histories the skip model beats each person's own per-artist skip rate for all 13 (AUC 0.85 against 0.62). On 301 public ListenBrainz histories the "will it stick" model reaches AUC 0.79 after the first session, against 0.62 for popularity. Listening traits fall onto two stable dials, exploring against staying with old favourites, and how fixed your listening hours are.
 
 Personality is much harder, and the honest answer is that the signal is small. Language carries most of it. A bag of words trained on student essays still reaches AUC 0.54 to 0.57 on tweets, and the fused v1 reader reaches a correlation of about 0.16 with the Big Five in simulation, with intervals that are calibrated but wide. Phone sensors, a fitness tracker and Steam profile counts showed nothing that survives correction at 46 to 149 people. None of the readers has yet been checked against real people's own questionnaires; `py/docs/study/` holds the protocol for that study.
 
 The full account, including what failed, is in `docs/REPORT.md` and `docs/MATH.md` for the engine and `py/README.md` and `py/docs/MATH.md` for the Python side.
+
+## What's next
+
+Personality scores this weak read like a horoscope for any one person, so the next stage leans on what works: statements that are true of one person and false of nearly everyone else, and predictions people can check for themselves (which songs they'll skip, which new artist will still be around in a month). The test for that stage is whether a blind judge can match a reading to the right person.
 
 ## Layout
 
