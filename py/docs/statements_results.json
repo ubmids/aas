@@ -1,0 +1,668 @@
+{
+ "people": 304,
+ "families": 34,
+ "lineups_per_target": 20,
+ "describe": [
+  {
+   "family": "new_share",
+   "group": "discovery",
+   "measured": 304,
+   "p10": 0.0926966281618117,
+   "median": 0.21203645767456467,
+   "p90": 0.3802029411181518,
+   "split_half_r": 0.7540232316183431,
+   "both_halves": 297
+  },
+  {
+   "family": "new_per_month",
+   "group": "discovery",
+   "measured": 304,
+   "p10": 12.566374039027906,
+   "median": 45.693639418626546,
+   "p90": 158.02438768109656,
+   "split_half_r": 0.8006162794142967,
+   "both_halves": 298
+  },
+  {
+   "family": "one_and_done",
+   "group": "discovery",
+   "measured": 303,
+   "p10": 0.2985073842130004,
+   "median": 0.45905292479108634,
+   "p90": 0.5554184501845019,
+   "split_half_r": 0.5813729872918396,
+   "both_halves": 294
+  },
+  {
+   "family": "stick_rate",
+   "group": "discovery",
+   "measured": 303,
+   "p10": 0.021602118046437958,
+   "median": 0.06909430438842204,
+   "p90": 0.2582224285353107,
+   "split_half_r": 0.7305065689970076,
+   "both_halves": 290
+  },
+  {
+   "family": "discovery_bursts",
+   "group": "discovery",
+   "measured": 303,
+   "p10": 0.28363672153736375,
+   "median": 0.4046610169491525,
+   "p90": 0.6634266860866054,
+   "split_half_r": 0.6443196636744328,
+   "both_halves": 285
+  },
+  {
+   "family": "comebacks_per_month",
+   "group": "discovery",
+   "measured": 293,
+   "p10": 0.47088706951897763,
+   "median": 3.3979486336337463,
+   "p90": 10.68984708347093,
+   "split_half_r": 0.5267379519619214,
+   "both_halves": 208
+  },
+  {
+   "family": "old_friends",
+   "group": "loyalty",
+   "measured": 304,
+   "p10": 0.14377747983179534,
+   "median": 0.3448603362736255,
+   "p90": 0.6339004585655443,
+   "split_half_r": 0.7949398780242978,
+   "both_halves": 295
+  },
+  {
+   "family": "season_turnover",
+   "group": "loyalty",
+   "measured": 302,
+   "p10": 0.43000000000000005,
+   "median": 0.7,
+   "p90": 0.8821029281277729,
+   "split_half_r": 0.8002739034394216,
+   "both_halves": 293
+  },
+  {
+   "family": "same_top",
+   "group": "loyalty",
+   "measured": 303,
+   "p10": 0.0,
+   "median": 0.16666666666666666,
+   "p90": 0.6666666666666666,
+   "split_half_r": 0.5870787826016273,
+   "both_halves": 270
+  },
+  {
+   "family": "dropped_cold",
+   "group": "loyalty",
+   "measured": 302,
+   "p10": 0.01666666666666668,
+   "median": 0.17734604105571847,
+   "p90": 0.5125172413793107,
+   "split_half_r": 0.593719309683498,
+   "both_halves": 297
+  },
+  {
+   "family": "top1_share",
+   "group": "concentration",
+   "measured": 304,
+   "p10": 0.03577045355686692,
+   "median": 0.08205255673147716,
+   "p90": 0.2242100198755693,
+   "split_half_r": 0.773608154244573,
+   "both_halves": 298
+  },
+  {
+   "family": "top5_share",
+   "group": "concentration",
+   "measured": 304,
+   "p10": 0.11467640134980657,
+   "median": 0.22954303741129106,
+   "p90": 0.485659141242929,
+   "split_half_r": 0.8121537546266052,
+   "both_halves": 298
+  },
+  {
+   "family": "effective_artists",
+   "group": "concentration",
+   "measured": 304,
+   "p10": 39.24590339408089,
+   "median": 132.40056656169062,
+   "p90": 451.68392065292045,
+   "split_half_r": 0.8664461476601257,
+   "both_halves": 298
+  },
+  {
+   "family": "weekly_one_artist",
+   "group": "concentration",
+   "measured": 304,
+   "p10": 0.06688638019771125,
+   "median": 0.15163783864230446,
+   "p90": 0.2837273564835754,
+   "split_half_r": 0.7332935645058588,
+   "both_halves": 296
+  },
+  {
+   "family": "artist_days",
+   "group": "concentration",
+   "measured": 304,
+   "p10": 0.03770278543005816,
+   "median": 0.18187021164310022,
+   "p90": 0.4612557412711305,
+   "split_half_r": 0.7876609993631394,
+   "both_halves": 297
+  },
+  {
+   "family": "back_to_back",
+   "group": "repetition",
+   "measured": 304,
+   "p10": 0.003909231866990207,
+   "median": 0.015688777334236802,
+   "p90": 0.07372915491063285,
+   "split_half_r": 0.8476791316003834,
+   "both_halves": 295
+  },
+  {
+   "family": "day_repeat",
+   "group": "repetition",
+   "measured": 304,
+   "p10": 0.03214553257917564,
+   "median": 0.11914191439244692,
+   "p90": 0.28011788931594983,
+   "split_half_r": 0.7911698101592483,
+   "both_halves": 295
+  },
+  {
+   "family": "heavy_rotation",
+   "group": "repetition",
+   "measured": 304,
+   "p10": 0.007890571687606278,
+   "median": 0.10618223062074128,
+   "p90": 0.44277832851849475,
+   "split_half_r": 0.8291016119107807,
+   "both_halves": 298
+  },
+  {
+   "family": "album_runs",
+   "group": "repetition",
+   "measured": 302,
+   "p10": 0.08891290567972915,
+   "median": 0.40595994514221645,
+   "p90": 0.853963435697715,
+   "split_half_r": 0.8872410891594656,
+   "both_halves": 291
+  },
+  {
+   "family": "depth",
+   "group": "repetition",
+   "measured": 304,
+   "p10": 14.027045454545455,
+   "median": 24.200000000000003,
+   "p90": 52.225034965034965,
+   "split_half_r": 0.8837982815865302,
+   "both_halves": 297
+  },
+  {
+   "family": "artist_run_len",
+   "group": "runs",
+   "measured": 304,
+   "p10": 1.1167300530319197,
+   "median": 1.6090596786290035,
+   "p90": 3.566098313723995,
+   "split_half_r": 0.9881059288852082,
+   "both_halves": 295
+  },
+  {
+   "family": "long_runs",
+   "group": "runs",
+   "measured": 304,
+   "p10": 0.03426129081261514,
+   "median": 0.178918137152064,
+   "p90": 0.45103998649035815,
+   "split_half_r": 0.848927585317007,
+   "both_halves": 295
+  },
+  {
+   "family": "artist_day_streak",
+   "group": "runs",
+   "measured": 304,
+   "p10": 3.5078947368421054,
+   "median": 6.309523809523809,
+   "p90": 19.195833333333326,
+   "split_half_r": 0.7321963382372142,
+   "both_halves": 298
+  },
+  {
+   "family": "peak4_share",
+   "group": "clock",
+   "measured": 304,
+   "p10": 0.24818649967183756,
+   "median": 0.31208333221113016,
+   "p90": 0.42764579320689405,
+   "split_half_r": 0.6367623833795701,
+   "both_halves": 298
+  },
+  {
+   "family": "centre_shift",
+   "group": "clock",
+   "measured": 304,
+   "p10": 1.557510004338542,
+   "median": 2.623951760091097,
+   "p90": 4.104170486656282,
+   "split_half_r": 0.6597111290674039,
+   "both_halves": 297
+  },
+  {
+   "family": "weekly_two_days",
+   "group": "clock",
+   "measured": 304,
+   "p10": 0.30219231835522026,
+   "median": 0.32757753966746794,
+   "p90": 0.39089449221185973,
+   "split_half_r": 0.5655249659707754,
+   "both_halves": 298
+  },
+  {
+   "family": "weekly_cv",
+   "group": "rhythm",
+   "measured": 304,
+   "p10": 0.3587284418342789,
+   "median": 0.674874997232559,
+   "p90": 1.653668626524772,
+   "split_half_r": 0.5465740028970686,
+   "both_halves": 298
+  },
+  {
+   "family": "active_days",
+   "group": "rhythm",
+   "measured": 304,
+   "p10": 0.31664148847322515,
+   "median": 0.7601221691844959,
+   "p90": 0.9792120798716244,
+   "split_half_r": 0.7564738830375292,
+   "both_halves": 298
+  },
+  {
+   "family": "plays_per_active_day",
+   "group": "rhythm",
+   "measured": 304,
+   "p10": 14.65,
+   "median": 28.5,
+   "p90": 83.69999999999999,
+   "split_half_r": 0.8333682152557144,
+   "both_halves": 298
+  },
+  {
+   "family": "silent_weeks",
+   "group": "rhythm",
+   "measured": 304,
+   "p10": 0.0,
+   "median": 0.018491933278643697,
+   "p90": 0.47367317674725395,
+   "split_half_r": 0.6949888290377598,
+   "both_halves": 298
+  },
+  {
+   "family": "mean_streak",
+   "group": "rhythm",
+   "measured": 304,
+   "p10": 3.0224197860962567,
+   "median": 7.959616937810084,
+   "p90": 72.73888888888882,
+   "split_half_r": 0.7140057236451933,
+   "both_halves": 298
+  },
+  {
+   "family": "session_minutes",
+   "group": "sessions",
+   "measured": 304,
+   "p10": 20.001666666666665,
+   "median": 35.41666666666667,
+   "p90": 58.199999999999974,
+   "split_half_r": 0.9379475424845228,
+   "both_halves": 295
+  },
+  {
+   "family": "marathon_share",
+   "group": "sessions",
+   "measured": 304,
+   "p10": 0.028081750575271874,
+   "median": 0.12463453498885048,
+   "p90": 0.43057513011872023,
+   "split_half_r": 0.8517255147861845,
+   "both_halves": 295
+  },
+  {
+   "family": "sessions_per_day",
+   "group": "sessions",
+   "measured": 304,
+   "p10": 1.9695815805775354,
+   "median": 2.810503739684151,
+   "p90": 4.314565594641495,
+   "split_half_r": 0.8296312521365092,
+   "both_halves": 295
+  }
+ ],
+ "coverage_full": {
+  "ge1": 0.8453947368421053,
+  "ge3": 0.6381578947368421,
+  "ge5": 0.45723684210526316,
+  "median": 4.0,
+  "mean": 4.766447368421052,
+  "per_family": {
+   "back_to_back": 29,
+   "depth": 33,
+   "heavy_rotation": 55,
+   "silent_weeks": 29,
+   "day_repeat": 51,
+   "discovery_bursts": 45,
+   "weekly_cv": 46,
+   "active_days": 58,
+   "long_runs": 48,
+   "artist_run_len": 44,
+   "new_per_month": 41,
+   "stick_rate": 47,
+   "session_minutes": 60,
+   "old_friends": 40,
+   "comebacks_per_month": 38,
+   "effective_artists": 41,
+   "top5_share": 52,
+   "one_and_done": 44,
+   "new_share": 43,
+   "top1_share": 49,
+   "dropped_cold": 44,
+   "peak4_share": 29,
+   "marathon_share": 48,
+   "plays_per_active_day": 21,
+   "centre_shift": 38,
+   "same_top": 24,
+   "weekly_two_days": 44,
+   "album_runs": 39,
+   "artist_day_streak": 37,
+   "weekly_one_artist": 43,
+   "artist_days": 48,
+   "season_turnover": 46,
+   "mean_streak": 56,
+   "sessions_per_day": 39
+  }
+ },
+ "coverage_h1": {
+  "ge3": 0.6710526315789473,
+  "ge5": 0.5032894736842105,
+  "median": 5.0
+ },
+ "stability": {
+  "made": 1591,
+  "held": 740,
+  "held_share": 0.46511627906976744,
+  "uncheckable": 1,
+  "still_rare": 648,
+  "still_rare_share": 0.4072910119421747,
+  "top3_made": 692,
+  "top3_held": 331,
+  "top3_held_share": 0.47832369942196534,
+  "per_family": {
+   "active_days": {
+    "made": 54,
+    "held": 24
+   },
+   "album_runs": {
+    "made": 42,
+    "held": 26
+   },
+   "artist_day_streak": {
+    "made": 38,
+    "held": 11
+   },
+   "artist_days": {
+    "made": 44,
+    "held": 25
+   },
+   "artist_run_len": {
+    "made": 51,
+    "held": 32
+   },
+   "back_to_back": {
+    "made": 25,
+    "held": 6
+   },
+   "centre_shift": {
+    "made": 59,
+    "held": 31
+   },
+   "comebacks_per_month": {
+    "made": 57,
+    "held": 28
+   },
+   "day_repeat": {
+    "made": 59,
+    "held": 35
+   },
+   "depth": {
+    "made": 50,
+    "held": 19
+   },
+   "discovery_bursts": {
+    "made": 53,
+    "held": 21
+   },
+   "dropped_cold": {
+    "made": 57,
+    "held": 20
+   },
+   "effective_artists": {
+    "made": 54,
+    "held": 24
+   },
+   "heavy_rotation": {
+    "made": 31,
+    "held": 13
+   },
+   "long_runs": {
+    "made": 54,
+    "held": 27
+   },
+   "marathon_share": {
+    "made": 51,
+    "held": 29
+   },
+   "mean_streak": {
+    "made": 53,
+    "held": 20
+   },
+   "new_per_month": {
+    "made": 51,
+    "held": 18
+   },
+   "new_share": {
+    "made": 52,
+    "held": 26
+   },
+   "old_friends": {
+    "made": 48,
+    "held": 21
+   },
+   "one_and_done": {
+    "made": 62,
+    "held": 26
+   },
+   "peak4_share": {
+    "made": 53,
+    "held": 25
+   },
+   "plays_per_active_day": {
+    "made": 32,
+    "held": 13
+   },
+   "same_top": {
+    "made": 30,
+    "held": 14
+   },
+   "season_turnover": {
+    "made": 46,
+    "held": 23
+   },
+   "session_minutes": {
+    "made": 27,
+    "held": 15
+   },
+   "sessions_per_day": {
+    "made": 44,
+    "held": 28
+   },
+   "silent_weeks": {
+    "made": 31,
+    "held": 13
+   },
+   "stick_rate": {
+    "made": 52,
+    "held": 27
+   },
+   "top1_share": {
+    "made": 48,
+    "held": 24
+   },
+   "top5_share": {
+    "made": 52,
+    "held": 24
+   },
+   "weekly_cv": {
+    "made": 61,
+    "held": 27
+   },
+   "weekly_one_artist": {
+    "made": 39,
+    "held": 19
+   },
+   "weekly_two_days": {
+    "made": 31,
+    "held": 6
+   }
+  }
+ },
+ "lineup": {
+  "only_k3": {
+   "accuracy": 0.549484649122807,
+   "ci95": [
+    0.5072563048245613,
+    0.5889187225877194
+   ],
+   "chance": 0.2,
+   "perm_null_mean": 0.20049438322368424,
+   "perm_null_p95": 0.2191311677631579,
+   "perm_p": 0.000999000999000999,
+   "targets": 304,
+   "lineups": 6080,
+   "mean_statements": 2.2445723684210526,
+   "targets_without_statements": 34,
+   "share_lineups_short": 0.36332236842105264,
+   "target_alone_on_top": 0.4254934210526316
+  },
+  "only_k5": {
+   "accuracy": 0.5764199561403508,
+   "ci95": [
+    0.5330979989035088,
+    0.6175357044956141
+   ],
+   "chance": 0.2,
+   "perm_null_mean": 0.2005316337719298,
+   "perm_null_p95": 0.22110416666666668,
+   "perm_p": 0.000999000999000999,
+   "targets": 304,
+   "lineups": 6080,
+   "mean_statements": 3.253782894736842,
+   "targets_without_statements": 33,
+   "share_lineups_short": 0.5490131578947368,
+   "target_alone_on_top": 0.46661184210526313
+  },
+  "barnum_k3": {
+   "accuracy": 0.319438048245614,
+   "ci95": [
+    0.3071024533991228,
+    0.33152446546052633
+   ],
+   "chance": 0.2,
+   "perm_null_mean": 0.2000544024122807,
+   "perm_null_p95": 0.21462184758771932,
+   "perm_p": 0.000999000999000999,
+   "targets": 304,
+   "lineups": 6080,
+   "mean_statements": 2.9671052631578947,
+   "targets_without_statements": 2,
+   "share_lineups_short": 0.013157894736842105,
+   "target_alone_on_top": 0.040460526315789475
+  },
+  "barnum_k5": {
+   "accuracy": 0.38285087719298244,
+   "ci95": [
+    0.36668023574561404,
+    0.39846511787280703
+   ],
+   "chance": 0.2,
+   "perm_null_mean": 0.2000209457236842,
+   "perm_null_p95": 0.21688569078947367,
+   "perm_p": 0.000999000999000999,
+   "targets": 304,
+   "lineups": 6080,
+   "mean_statements": 4.934210526315789,
+   "targets_without_statements": 2,
+   "share_lineups_short": 0.019736842105263157,
+   "target_alone_on_top": 0.09194078947368421
+  }
+ },
+ "pass": {
+  "rule": "only-you top-3 accuracy >= 0.60, 95% CI lower bound > 0.40, permutation p < 0.01",
+  "passed": false
+ },
+ "exploratory": {
+  "only_k3_by_statements": {
+   "0": {
+    "lineups": 770,
+    "accuracy": 0.2
+   },
+   "1": {
+    "lineups": 844,
+    "accuracy": 0.36919431279620857
+   },
+   "2": {
+    "lineups": 595,
+    "accuracy": 0.4984313725490196
+   },
+   "3": {
+    "lineups": 3871,
+    "accuracy": 0.6661586153448721
+   }
+  },
+  "only_k3_targets_with_3_every_lineup": {
+   "targets": 191,
+   "accuracy": 0.6672774869109948
+  },
+  "nearest_neighbour_all_families": {
+   "accuracy": 0.8679276315789474,
+   "ci95": [
+    0.8388157894736842,
+    0.8935855263157894
+   ],
+   "note": "same lineups as only_k3; mean absolute z difference over all 34 families"
+  },
+  "stability_by_confidence": {
+   "0.50-0.70": {
+    "made": 795,
+    "held": 0.3836477987421384
+   },
+   "0.70-0.90": {
+    "made": 433,
+    "held": 0.5265588914549654
+   },
+   "0.90-0.99": {
+    "made": 264,
+    "held": 0.5795454545454546
+   },
+   "0.99-1.00": {
+    "made": 99,
+    "held": 0.5454545454545454
+   }
+  }
+ }
+}

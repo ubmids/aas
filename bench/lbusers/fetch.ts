@@ -2,10 +2,11 @@
 // Raw pages are trimmed (cover art and streaming links dropped) and cached gzipped under
 // bench/data/lbusers/raw/<pseudonym>/. Resumable per user: state in raw/<pseudonym>/state.json.
 // Usage: npx tsx bench/lbusers/fetch.ts [users=360] [cap=60000] [workers=3]
-import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+//        LB_SET=fresh npx tsx bench/lbusers/fetch.ts 400 60000 3   (the confirmation set)
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { gunzipSync, gzipSync } from 'node:zlib';
-import { DATA, RAW, get, pseud, readJson, writeJson } from './lib.js';
+import { DATA, RAW, RAW_MAIN, SET, get, pseud, readJson, writeJson } from './lib.js';
 
 const nUsers = Number(process.argv[2] ?? 360);
 const CAP = Number(process.argv[3] ?? 60_000);   // most recent listens per user
@@ -16,7 +17,9 @@ const HARD_CAP = 150_000;                        // ...but never past this many 
 
 const cands = readJson<Record<string, any>>(join(DATA, 'candidates.json'), {});
 // deterministic order: pseudonym, so the sample does not follow the graph walk
+// LB_SET=fresh: only users the first download never started (no folder under raw/)
 const users = Object.values(cands).filter((c) => c.ok).map((c) => c.user as string)
+  .filter((u) => SET !== 'fresh' || !existsSync(join(RAW_MAIN, pseud(u))))
   .sort((a, b) => (pseud(a) < pseud(b) ? -1 : 1)).slice(0, nUsers);
 
 function trim(l: any) {

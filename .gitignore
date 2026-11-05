@@ -11,3 +11,4 @@ __pycache__/
 .env
 .env.*
 py/models/*/model.joblib
+py/docs/statements_cards.md

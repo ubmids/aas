@@ -126,3 +126,28 @@ yourself, came on by itself), selves from device or shuffle context.
 - Sample bias: found through the similar-users graph and from developers' accounts outward, so
   these are ListenBrainz people (self-hosters, Last.fm veterans), not a cross-section of Spotify
   listeners. Results here say how well a model generalises across people, not to the general public.
+
+## The fresh set (statements round 2)
+
+`LB_SET=fresh` selects a second, separate download used to confirm the statements lane on people
+nobody had looked at (`py/docs/statements.md`, round 2). On 5 November 2026 the walk was continued
+from where it stopped (`discover.ts 770`, same rules); it reached 817 qualifying accounts. The fresh
+set is the qualifying accounts that the first download never started, in pseudonym order, up to 370:
+
+```
+LB_SET=fresh npx tsx bench/lbusers/fetch.ts 370 60000 6
+LB_SET=fresh npx tsx bench/lbusers/normalise.ts
+```
+
+It shares the salt and `candidates.json`, and keeps its pages, plays and summary in `raw_fresh/`,
+`plays_fresh/` and `summary_fresh.json`, so the first bench is untouched. One exclusion was added to
+the cleaning rules for both sets: one artist above 75% of listens, or fewer than 50 different
+artists (the first bench had one such account; its plays file is left in place and the statements
+code applies the same rule when it loads people). A first try with 20 parallel downloads lost
+contact with every MetaBrainz host for a few minutes, so the fresh download runs with 6.
+
+All 370 downloaded without a failure (1.5 GB of raw pages). Cleaning kept 359: 7 excluded for
+listens faster than listening, 5 for 500+ listens a day, 2 for scripted pacing, 1 each for bulk-import
+timestamps, one track dominating, too few listens and under 12 months (some hit more than one rule),
+none for the single-artist rule. 477,608 duplicate scrobbles and 545 impossible timestamps were
+removed; the kept set holds 16,843,110 listens, median 57,640 per user over a median 1,620 days.

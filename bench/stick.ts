@@ -147,6 +147,8 @@ const metrics = (s: Scored) => {
 const out: Record<string, number>[] = people.map(() => ({}));
 const pooled: Record<string, { p: number[]; y: number[] }> = {};
 const examples: { name: string; r: NewArtist; p: number; x: number[] }[] = [];
+// held-out session-horizon scores of the full model, for the prediction game (bench/game.ts)
+const heldScores: Record<string, { p: number[]; y: number[]; logPeople: number[]; logListed: number[]; sessProper: number[]; sessPlays: number[] }> = {};
 for (const h of HORIZONS) {
   const tag = h === 'session' ? 'st_s' : 'st_w';
   for (const spec of specsFor(h)) {
@@ -159,7 +161,11 @@ for (const h of HORIZONS) {
         for (const [mk, v] of Object.entries(m)) if (mk === 'n' || mk === 'pos' ? spec.key === 'full' : true) out[k][`${tag}_${part}_${mk}${spec.key === 'full' ? '' : `_${spec.key}`}`] = v;
         const pk = `${h}:${part}:${spec.key}`;
         (pooled[pk] ??= { p: [], y: [] }).p.push(...s.p); pooled[pk].y.push(...s.y);
-        if (spec.key === 'full' && part === 'held' && h === 'session') s.rows.forEach((r, j) => examples.push({ name: P.name, r, p: s.p[j], x: F.X[j] }));
+        if (spec.key === 'full' && part === 'held' && h === 'session') {
+          s.rows.forEach((r, j) => examples.push({ name: P.name, r, p: s.p[j], x: F.X[j] }));
+          const F0 = featuresOf('session'), col = (c: string) => F.X.map((x) => x[F0.indexOf(c)]);
+          heldScores[P.name] = { p: s.p, y: s.y, logPeople: col('logPeople'), logListed: col('logListed'), sessProper: col('sessProper'), sessPlays: col('sessPlays') };
+        }
       }
     });
     const pr = pooled[`${h}:roll:${spec.key}`];
@@ -222,4 +228,5 @@ writeFileSync('bench/out/stick.json', JSON.stringify({
   at: new Date().toISOString(), quick: QUICK, names: people.map((p) => p.name), rows: out, pooled: pooledOut,
   specs: Object.fromEntries(HORIZONS.map((h) => [h, specsFor(h).map((s) => s.key)])), weights, leak: { checked: leakChecked, failed: leakFailed }, examples: exampleLines,
 }));
+writeFileSync('bench/out/stick_held.json', JSON.stringify({ at: new Date().toISOString(), people: heldScores }));
 log('wrote bench/out/stick.json');

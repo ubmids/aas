@@ -1,11 +1,12 @@
 // Step 3: turn each user's raw pages into one clean, time-ordered play list, drop duplicate
 // scrobbles and impossible timestamps, and exclude accounts that look imported-in-bulk or automated.
-// Writes bench/data/lbusers/plays/<pseudonym>.json.gz and bench/data/lbusers/summary.json.
+// Writes bench/data/lbusers/plays/<pseudonym>.json.gz and bench/data/lbusers/summary.json
+// (with LB_SET=fresh: plays_fresh/ and summary_fresh.json).
 // Usage: npx tsx bench/lbusers/normalise.ts
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { gunzipSync, gzipSync } from 'node:zlib';
-import { DATA, PLAYS, RAW, readJson, writeJson } from './lib.js';
+import { PLAYS, RAW, SUMMARY, readJson, writeJson } from './lib.js';
 import type { LbPlay } from './load.js';
 
 const DAY = 86400;
@@ -20,6 +21,9 @@ export const RULES = {
   maxHeavyDays: 0.02,       // share of active days with 500+ listens
   maxTopTrack: 0.30,        // one track over 30% of all listens (loops, sleep sounds, bots)
   maxRegularGap: 0.30,      // one exact gap length over 30% of gaps under an hour (scripted pacing)
+  // added 5 Nov 2026 (statements round 2) after an account playing one artist only slipped through:
+  maxTopArtist: 0.75,       // one artist over 75% of all listens
+  minArtists: 50,           // fewer than 50 different artists in the whole history
 };
 
 type Raw = { ts: number; ins: number | null; msid: string; artist: string; track: string; release: string | null;
@@ -85,6 +89,9 @@ function clean(id: string) {
   const trackCount = new Map<string, number>();
   for (const l of plays) { const k = (l.artist + '\u0000' + l.track).toLowerCase(); trackCount.set(k, (trackCount.get(k) ?? 0) + 1); }
   const topTrack = Math.max(0, ...trackCount.values()) / Math.max(1, plays.length);
+  const artistCount = new Map<string, number>(); // keyed as the statements engine keys artists
+  for (const l of plays) { const k = l.artistMbids?.length === 1 ? l.artistMbids[0] : 'n:' + l.artist.toLowerCase(); artistCount.set(k, (artistCount.get(k) ?? 0) + 1); }
+  const topArtist = Math.max(0, ...artistCount.values()) / Math.max(1, plays.length);
   const span = plays.length ? (plays[plays.length - 1].ts - plays[0].ts) / DAY : 0;
   const imported = plays.filter((l) => l.ins !== null && l.ins - l.ts > 7 * DAY).length / Math.max(1, plays.length);
   const withMbid = plays.filter((l) => l.artistMbids?.length).length / Math.max(1, plays.length);
@@ -98,6 +105,7 @@ function clean(id: string) {
   if (heavyDays > RULES.maxHeavyDays) why.push('500+ listens a day');
   if (topTrack > RULES.maxTopTrack) why.push('one track dominates');
   if (regularGap > RULES.maxRegularGap) why.push('scripted pacing');
+  if (topArtist > RULES.maxTopArtist || artistCount.size < RULES.minArtists) why.push('one artist only');
   if (plays.length < RULES.minListens) why.push('too few listens after cleaning');
   if (span < RULES.minSpanDays) why.push('under 12 months kept');
   if (weeks.size < RULES.minActiveWeeks) why.push('too few active weeks');
@@ -111,7 +119,7 @@ function clean(id: string) {
     id, fetched: n0, kept: plays.length, badTs, dups, spanDays: Math.round(span), activeWeeks: weeks.size,
     first: plays[0]?.ts ?? null, last: plays[plays.length - 1]?.ts ?? null,
     sharedTs: +sharedTs.toFixed(4), fastGaps: gaps ? +(fast / gaps).toFixed(4) : 0, heavyDays: +heavyDays.toFixed(4),
-    topTrack: +topTrack.toFixed(4), regularGap: +regularGap.toFixed(4), imported: +imported.toFixed(3),
+    topTrack: +topTrack.toFixed(4), topArtist: +topArtist.toFixed(4), artists: artistCount.size, regularGap: +regularGap.toFixed(4), imported: +imported.toFixed(3),
     withMbid: +withMbid.toFixed(3), withDur: +withDur.toFixed(3),
     topClients: [...clients].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([c, n]) => [c, +(n / plays.length).toFixed(3)]),
     excluded: why.length ? why : null,
@@ -128,7 +136,7 @@ for (const id of ids) {
   if (!stats.excluded) writeFileSync(f, gzipSync(JSON.stringify(out)));
   else if (existsSync(f)) writeFileSync(f, ''); // keep the bench consistent with the rules
 }
-writeJson(join(DATA, 'summary.json'), summary);
+writeJson(SUMMARY, summary);
 const kept = summary.filter((s) => !s.excluded);
 const reasons = new Map<string, number>();
 for (const s of summary) for (const w of s.excluded ?? []) reasons.set(w, (reasons.get(w) ?? 0) + 1);

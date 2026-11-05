@@ -64,3 +64,12 @@ Several things failed. Phone, wearable and Steam data showed nothing that surviv
 Haiku's ratings of 2,000 forum users failed its pre-registered rule narrowly (0.586 against a mark of 0.588 on
 tweets and vlogs, 0.583 against 0.596 over three sets; `docs/distill.md`). It is saved and not a default. In
 simulation it would raise fused E and N and lower C, which MATH.md section 5.6 reports as a sensitivity row.
+
+## Statements (5 Nov 2026)
+
+`src/aas/statements/` turns a listening history into sentences that are true of the person and of at most 10% of
+304 ListenBrainz listeners ("two days in a row each week hold at least 55% of your plays", true of none of the
+others), from 34 behavioural families with round-number thresholds. Pre-registered lineup test: three statements
+from the first half of a history pick the person's second half out of five 54.9% of the time (95% interval 50.7%
+to 58.9%, chance 20%), which misses the 60% bar. 64% of people have three or more such statements, and 46.5% of
+statements made on one half still hold on the other. `docs/statements.md` has the method, results and limits.

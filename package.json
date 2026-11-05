@@ -15,7 +15,8 @@
     "stick": "tsx bench/stick.ts",
     "lb3": "tsx bench/lb3/prep.ts && tsx bench/lb3/person.ts && tsx bench/lb3/models.ts && tsx bench/lb3/analyse.ts",
     "lb3:lists": "tsx bench/lbusers/lists.ts",
-    "export:stick": "tsx bench/lb3/export_stick.ts"
+    "export:stick": "tsx bench/lb3/export_stick.ts",
+    "game": "node --max-old-space-size=8192 node_modules/.bin/tsx bench/game.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

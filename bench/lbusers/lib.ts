@@ -8,8 +8,15 @@ import { execFile } from 'node:child_process';
 export const API = 'https://api.listenbrainz.org/1';
 export const UA = 'aas-bench/0.1'; // no contact address, by rule
 export const DATA = join(import.meta.dirname, '..', 'data', 'lbusers');
-export const RAW = join(DATA, 'raw');
-export const PLAYS = join(DATA, 'plays');
+// LB_SET=fresh selects the confirmation set (round 2 of the statements lane): listeners found by the
+// same walk who are not in the first download. It shares the salt and the candidate list, and keeps
+// its pages and plays in raw_fresh/ and plays_fresh/ so the first bench is never touched.
+export const SET = process.env.LB_SET === 'fresh' ? 'fresh' : 'main';
+const SUFFIX = SET === 'fresh' ? '_fresh' : '';
+export const RAW_MAIN = join(DATA, 'raw');
+export const RAW = join(DATA, 'raw' + SUFFIX);
+export const PLAYS = join(DATA, 'plays' + SUFFIX);
+export const SUMMARY = join(DATA, 'summary' + SUFFIX + '.json');
 for (const d of [DATA, RAW, PLAYS]) mkdirSync(d, { recursive: true });
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));

@@ -19,6 +19,7 @@ One recipe for every text model here:
 from __future__ import annotations
 
 import json
+import re
 import time
 from dataclasses import dataclass, field
 from datetime import date
@@ -70,6 +71,7 @@ class Corpus:
     min_df: int
     k_grid: list[int]
     meta: dict = field(default_factory=dict)
+    author_filter: bool = False     # drop author-identifying tokens from the vocabulary (forum corpora)
 
     @property
     def words(self) -> np.ndarray:
@@ -88,7 +90,7 @@ def load_mbti_corpus() -> Corpus:
         "licence": "mirror tagged Apache-2.0; original Kaggle dataset is CC0 public domain scraped forum text; research use",
         "short": "8,675 PersonalityCafe forum users",
         "unit": "forum posts (the last ~50 per user)",
-    })
+    }, author_filter=True)
 
 
 def load_essays_corpus() -> Corpus:
@@ -142,13 +144,53 @@ def doc(items: list[str]) -> str:
     return "\n".join(items)
 
 
-def fit_vocab(docs: list[str], cfg: dict, min_df: int) -> tuple[dict, np.ndarray, CountVectorizer]:
-    """Vocabulary + idf learned from these documents only. Same idf formula as sklearn (smooth_idf)."""
+MENTION = re.compile(r"@([A-Za-z0-9_][A-Za-z0-9_.-]*)")
+_TOKEN = re.compile(r"(?u)\b\w\w+\b")  # CountVectorizer's default token pattern
+
+
+def author_tokens(items_by_author: list[list[str]], min_authors: int = 2, max_author_share: float = 0.5) -> set[str]:
+    """Tokens that identify a forum author rather than describe how they write. Forum text carries
+    usernames: people sign posts, quote and address each other by handle. A username is not a style
+    signal and on a type-sorted forum it can stand in for the label. Dropped:
+      - every token used by fewer than `min_authors` authors (a word only one person ever writes),
+      - every token one author accounts for more than `max_author_share` of all uses of,
+      - every @mention handle (the parts the vectorizer would read from it).
+    Lower-cased, tokenised as CountVectorizer does, so the set can be removed from its vocabulary."""
+    from collections import Counter
+
+    authors: Counter = Counter()
+    total: Counter = Counter()
+    top: dict[str, int] = {}
+    drop: set[str] = set()
+    for items in items_by_author:
+        own: Counter = Counter()
+        for x in items:
+            own.update(_TOKEN.findall(x.lower()))
+            for h in MENTION.findall(x):
+                drop.update(_TOKEN.findall(h.lower()))
+        authors.update(own.keys())
+        total.update(own)
+        for t, n in own.items():
+            if n > top.get(t, 0):
+                top[t] = n
+    for t, n in total.items():
+        if authors[t] < min_authors or top[t] > max_author_share * n:
+            drop.add(t)
+    return drop
+
+
+def fit_vocab(docs: list[str], cfg: dict, min_df: int, drop: set[str] | None = None) -> tuple[dict, np.ndarray, CountVectorizer]:
+    """Vocabulary + idf learned from these documents only. Same idf formula as sklearn (smooth_idf).
+    `drop`: tokens to leave out (author_tokens); an n-gram is left out when any of its words is."""
     v = CountVectorizer(min_df=min_df, max_features=cfg["max_features"], ngram_range=tuple(cfg["ngram_range"]), dtype=np.float64)
     Cn = v.fit_transform(docs)
     df = np.bincount(Cn.indices, minlength=Cn.shape[1])
     idf = np.log((1 + Cn.shape[0]) / (1 + df)) + 1
     vocab = {k: int(i) for k, i in v.vocabulary_.items()}
+    if drop:
+        keep = sorted((i, k) for k, i in vocab.items() if not any(w in drop for w in k.split(" ")))
+        idf = idf[[i for i, _ in keep]]
+        vocab = {k: j for j, (_, k) in enumerate(keep)}
     if hasattr(v, "stop_words_"):
         del v.stop_words_  # the pruned-term list; not needed and large
     return vocab, idf, R.build_vectorizer(vocab, cfg["ngram_range"])
@@ -264,7 +306,8 @@ def select_pipeline(c: Corpus, dev: np.ndarray, emb: np.ndarray | None = None, f
     oof = {(cfg["name"], pen, t): np.zeros(len(dev)) for cfg in VEC_CONFIGS for pen in pens for t in traits}
     for f, (tr, te) in enumerate(fl):
         for cfg in VEC_CONFIGS:
-            vocab, idf, vec = fit_vocab([docs[i] for i in tr], cfg, c.min_df)
+            drop = author_tokens([c.items[dev[i]] for i in tr]) if c.author_filter else None
+            vocab, idf, vec = fit_vocab([docs[i] for i in tr], cfg, c.min_df, drop)
             Xtr = R.tfidf(vec.transform([docs[i] for i in tr]), idf)
             Xte = R.tfidf(vec.transform([docs[i] for i in te]), idf)
             for ti, t in enumerate(traits):
@@ -315,7 +358,7 @@ def fit_model(c: Corpus, people: np.ndarray, choice: dict, folds: int = 5, seed:
     Y = c.Y.to_numpy()[people]
     cfg = choice["config"]
     docs = [doc(c.items[p]) for p in people]
-    vocab, idf, vec = fit_vocab(docs, cfg, c.min_df)
+    vocab, idf, vec = fit_vocab(docs, cfg, c.min_df, author_tokens([c.items[p] for p in people]) if c.author_filter else None)
     bank = ItemBank(c, people, vec)
     X = R.tfidf(bank.select(None, None)[0], idf)
     words_all = bank.person_words()

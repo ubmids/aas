@@ -196,6 +196,39 @@ def test_domain_stable_terms_drop_domain_words():
     assert not ({"roommate", "subscribe", "class", "vlog"} & terms)
 
 
+def test_author_tokens_drop_author_unique_and_mentions():
+    from aas.readers import text_train as TT
+
+    items = [
+        ["i think the plan is good, zorblax88 signing off", "the plan works for me"],
+        ["i think the plan is fine", "thanks @Kestrel_Moon for the plan"],
+        ["the plan is good i think", "i think so too"],
+    ]
+    drop = TT.author_tokens(items)
+    assert "zorblax88" in drop          # only one author ever writes it
+    assert "kestrel_moon" in drop       # an @mention handle
+    assert not ({"the", "plan", "think", "is"} & drop)
+
+
+def test_author_tokens_drop_one_author_dominated_token():
+    from aas.readers import text_train as TT
+
+    items = [["mirelle says hi mirelle out mirelle again"], ["hi there mirelle"], ["hi all"]]
+    drop = TT.author_tokens(items)
+    assert "mirelle" in drop and "hi" not in drop
+
+
+def test_fit_vocab_removes_dropped_tokens_and_their_ngrams():
+    from aas.readers import text_train as TT
+
+    docs = ["the plan zorblax88 works"] * 3 + ["the plan works well"] * 3
+    vocab, idf, vec = TT.fit_vocab(docs, {"ngram_range": [1, 2], "max_features": 1000}, 1, {"zorblax88"})
+    assert not any("zorblax88" in k for k in vocab)
+    assert {"the", "plan", "works", "the plan"} <= set(vocab)
+    assert sorted(vocab.values()) == list(range(len(vocab))) and len(idf) == len(vocab)
+    assert vec.transform(["the plan zorblax88"]).sum() == 3
+
+
 def test_median_split_within_dataset():
     from aas.readers import text_train as TT
 
