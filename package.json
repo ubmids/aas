@@ -1,0 +1,25 @@
+{
+  "name": "aas",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bench": "tsx bench/run.ts",
+    "test": "tsx --test engine/test/*.test.ts",
+    "describe": "tsx bench/run.ts --describe",
+    "map": "tsx bench/maptest.ts",
+    "doors": "tsx bench/doors.ts",
+    "traits": "tsx bench/traits.ts",
+    "report": "tsx bench/run.ts && tsx bench/doors.ts && tsx bench/traits.ts && tsx bench/rank2.ts && tsx bench/stick.ts && tsx bench/report.ts",
+    "report:only": "tsx bench/report.ts",
+    "rank2": "tsx bench/rank2.ts",
+    "stick": "tsx bench/stick.ts",
+    "lb3": "tsx bench/lb3/prep.ts && tsx bench/lb3/person.ts && tsx bench/lb3/models.ts && tsx bench/lb3/analyse.ts",
+    "lb3:lists": "tsx bench/lbusers/lists.ts",
+    "export:stick": "tsx bench/lb3/export_stick.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

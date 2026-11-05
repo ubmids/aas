@@ -1,0 +1,383 @@
+{
+ "reader": "text-distilled",
+ "version": "1.0.0",
+ "trained": "2026-11-05",
+ "target": "teacher_score",
+ "traits": [
+  "O",
+  "C",
+  "E",
+  "A",
+  "N"
+ ],
+ "trait_names": {
+  "O": "openness",
+  "C": "conscientiousness",
+  "E": "extraversion",
+  "A": "agreeableness",
+  "N": "neuroticism"
+ },
+ "default": false,
+ "status": "FAILED the pre-registered rule (docs/distill.md); saved for the record, not wired as the default reader",
+ "teacher": {
+  "model": "claude-haiku-4-5-20251001",
+  "prompt_version": "b5-ipip50-v1",
+  "budget_tokens": 1500,
+  "note": "Claude Haiku 4.5 read each pool person's leak-stripped text zero-shot and rated the five traits 1-5 (IPIP-50 scale). The student learns to reproduce those ratings. No self-report label of any kind was used in training."
+ },
+ "data": {
+  "pool": "PersonalityCafe forum users (Kaggle datasnaek/mbti-type via Hugging Face jingjietan/kaggle-mbti); MBTI labels dropped, never read",
+  "n": 2000,
+  "seed": 20261105,
+  "excluded": "Essays, PAN 2015 and YouTube vlogs (the test sets) are not in the pool and were not used for any fitting or tuning"
+ },
+ "features": {
+  "recipe": "mix",
+  "parts": [
+   "bow",
+   "emb"
+  ],
+  "text": "readers.text.clean on every item, then cut to ~1,500 tokens (seeded random sample of whole items, or the first N words of one long text): the text the teacher read",
+  "bow": "uni+bigram counts, top 20,000 terms in >= 5 pool people, sublinear TF-IDF, L2 per person; ridge per trait, alpha by GCV on the pool",
+  "emb": "all-MiniLM-L6-v2 (fastembed ONNX, on device) mean over 100-word chunks (<= 40), standardised; ridge per trait, alpha by GCV on the pool",
+  "mix": "mean of the two students' z-scored predictions"
+ },
+ "fidelity_pool_cv": {
+  "what": "Pearson r between the student's out-of-fold prediction and Haiku's rating, 5-fold CV on the pool",
+  "bow": {
+   "O": 0.5344384880672873,
+   "C": 0.46672121347025597,
+   "E": 0.5424364500980032,
+   "A": 0.7014272676347751,
+   "N": 0.5682079518892297
+  },
+  "emb": {
+   "O": 0.6207882504096974,
+   "C": 0.4904255824876679,
+   "E": 0.5828921848902173,
+   "A": 0.6946745814093916,
+   "N": 0.5861009117480378
+  },
+  "mix": {
+   "O": 0.6269221861594766,
+   "C": 0.5228472502894022,
+   "E": 0.6076181496952765,
+   "A": 0.7372744155858281,
+   "N": 0.6238216097734242
+  }
+ },
+ "test": {
+  "what": "AUC against each test set's own median split (r against continuous scores where released), every test person, student reading the same ~1,500-token cut text; 95% CI by bootstrap. All three are kinds of writing the student never saw.",
+  "per_dataset": {
+   "essays": {
+    "O": {
+     "auc": 0.5936,
+     "auc_ci": [
+      0.5453,
+      0.6443
+     ],
+     "r": null,
+     "n": 494
+    },
+    "C": {
+     "auc": 0.6205,
+     "auc_ci": [
+      0.5737,
+      0.6711
+     ],
+     "r": null,
+     "n": 494
+    },
+    "E": {
+     "auc": 0.5818,
+     "auc_ci": [
+      0.5299,
+      0.6311
+     ],
+     "r": null,
+     "n": 494
+    },
+    "A": {
+     "auc": 0.5501,
+     "auc_ci": [
+      0.5006,
+      0.6001
+     ],
+     "r": null,
+     "n": 494
+    },
+    "N": {
+     "auc": 0.6055,
+     "auc_ci": [
+      0.5587,
+      0.6533
+     ],
+     "r": null,
+     "n": 494
+    }
+   },
+   "pan15": {
+    "O": {
+     "auc": 0.4732,
+     "auc_ci": [
+      0.4081,
+      0.5357
+     ],
+     "r": -0.0287,
+     "n": 294
+    },
+    "C": {
+     "auc": 0.4757,
+     "auc_ci": [
+      0.4086,
+      0.5472
+     ],
+     "r": 0.2065,
+     "n": 294
+    },
+    "E": {
+     "auc": 0.5893,
+     "auc_ci": [
+      0.5121,
+      0.665
+     ],
+     "r": 0.0578,
+     "n": 294
+    },
+    "A": {
+     "auc": 0.5459,
+     "auc_ci": [
+      0.4808,
+      0.6086
+     ],
+     "r": 0.0849,
+     "n": 294
+    },
+    "N": {
+     "auc": 0.6136,
+     "auc_ci": [
+      0.551,
+      0.6769
+     ],
+     "r": 0.2643,
+     "n": 294
+    }
+   },
+   "vlogs": {
+    "O": {
+     "auc": 0.572,
+     "auc_ci": [
+      0.5168,
+      0.6287
+     ],
+     "r": 0.1793,
+     "n": 404
+    },
+    "C": {
+     "auc": 0.7017,
+     "auc_ci": [
+      0.6518,
+      0.7546
+     ],
+     "r": 0.4315,
+     "n": 404
+    },
+    "E": {
+     "auc": 0.6503,
+     "auc_ci": [
+      0.5977,
+      0.7023
+     ],
+     "r": 0.3275,
+     "n": 404
+    },
+    "A": {
+     "auc": 0.7702,
+     "auc_ci": [
+      0.7244,
+      0.8148
+     ],
+     "r": 0.5772,
+     "n": 404
+    },
+    "N": {
+     "auc": 0.606,
+     "auc_ci": [
+      0.5512,
+      0.6632
+     ],
+     "r": 0.236,
+     "n": 404
+    }
+   }
+  },
+  "mean_auc": {
+   "student_mix": 0.5966313442850789,
+   "bow_reader": 0.5810079429580636,
+   "student_bow": 0.5865973487810806,
+   "student_emb": 0.5894564189672683
+  }
+ },
+ "verdict": {
+  "chosen_student": "mix",
+  "pass": false,
+  "rule": "pass iff student mean AUC on PAN15+vlogs >= 0.588 AND student mean AUC on Essays+PAN15+vlogs >= bow + 0.5*(haiku - bow) on the same paired 150-person samples",
+  "pan15+vlogs": {
+   "student": 0.5862264186877588,
+   "threshold": 0.588,
+   "haiku": 0.6176007190578188,
+   "bow": 0.5579056234171154
+  },
+  "three_sets": {
+   "student": 0.5826711016708908,
+   "threshold": 0.5960887592769115,
+   "haiku": 0.6184883203889046,
+   "bow": 0.5736891981649185
+  }
+ },
+ "validity_by_source": {
+  "date": "2026-11-05",
+  "kinds": {
+   "essay_like": {
+    "O": {
+     "auc": 0.5936,
+     "auc_ci": [
+      0.5453,
+      0.6443
+     ],
+     "measured_on": "essays"
+    },
+    "C": {
+     "auc": 0.6205,
+     "auc_ci": [
+      0.5737,
+      0.6711
+     ],
+     "measured_on": "essays"
+    },
+    "E": {
+     "auc": 0.5818,
+     "auc_ci": [
+      0.5299,
+      0.6311
+     ],
+     "measured_on": "essays"
+    },
+    "A": {
+     "auc": 0.5501,
+     "auc_ci": [
+      0.5006,
+      0.6001
+     ],
+     "measured_on": "essays"
+    },
+    "N": {
+     "auc": 0.6055,
+     "auc_ci": [
+      0.5587,
+      0.6533
+     ],
+     "measured_on": "essays"
+    }
+   },
+   "tweets": {
+    "O": {
+     "auc": 0.4732,
+     "auc_ci": [
+      0.4081,
+      0.5357
+     ],
+     "measured_on": "pan15"
+    },
+    "C": {
+     "auc": 0.4757,
+     "auc_ci": [
+      0.4086,
+      0.5472
+     ],
+     "measured_on": "pan15"
+    },
+    "E": {
+     "auc": 0.5893,
+     "auc_ci": [
+      0.5121,
+      0.665
+     ],
+     "measured_on": "pan15"
+    },
+    "A": {
+     "auc": 0.5459,
+     "auc_ci": [
+      0.4808,
+      0.6086
+     ],
+     "measured_on": "pan15"
+    },
+    "N": {
+     "auc": 0.6136,
+     "auc_ci": [
+      0.551,
+      0.6769
+     ],
+     "measured_on": "pan15"
+    }
+   },
+   "other_prose": {
+    "O": {
+     "auc": 0.4732,
+     "auc_ci": [
+      0.4081,
+      0.5357
+     ],
+     "measured_on": "pan15",
+     "note": "stand-in, not measured"
+    },
+    "C": {
+     "auc": 0.4757,
+     "auc_ci": [
+      0.4086,
+      0.5472
+     ],
+     "measured_on": "pan15",
+     "note": "stand-in, not measured"
+    },
+    "E": {
+     "auc": 0.5893,
+     "auc_ci": [
+      0.5121,
+      0.665
+     ],
+     "measured_on": "pan15",
+     "note": "stand-in, not measured"
+    },
+    "A": {
+     "auc": 0.5459,
+     "auc_ci": [
+      0.4808,
+      0.6086
+     ],
+     "measured_on": "pan15",
+     "note": "stand-in, not measured"
+    },
+    "N": {
+     "auc": 0.606,
+     "auc_ci": [
+      0.5512,
+      0.6632
+     ],
+     "measured_on": "vlogs",
+     "note": "stand-in, not measured"
+    }
+   }
+  },
+  "refused_traits": [],
+  "classify": "as text-bigfive: readers.text.kind_of_writing"
+ },
+ "interval": "z = r * (score - pool mean) / pool sd, r implied by the stated AUC for that kind of writing; 80% interval z +- 1.28*sqrt(1 - r^2). The z is derived for display: the student predicts a rating, not a questionnaire score.",
+ "min_text": {
+  "floor_words": 50,
+  "note": "below 50 words the reader says nothing (the teacher was never asked about less than ~100 words)"
+ },
+ "privacy": "Runs entirely on the person's machine: TF-IDF and/or a 90 MB ONNX sentence encoder plus 5 linear heads. No text leaves the device.",
+ "terms_note": "Trained on outputs of Claude Haiku 4.5. Anthropic's commercial terms restrict using outputs to build competing AI models; a 5-number personality regressor is unlikely to be that, but check before any commercial release."
+}

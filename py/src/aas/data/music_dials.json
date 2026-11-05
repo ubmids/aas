@@ -1,0 +1,14 @@
+{
+ "source": "304 public ListenBrainz histories (AAS round 3 bench), training weeks; Python port of the TS traits",
+ "n": 301,
+ "clip": 0.0033112582781456954,
+ "traits": ["new_share", "old_friends", "season_turnover", "clock_spread", "clock_regularity"],
+ "standardise": "each trait -> percentile on music_norms.json -> normal score qnorm(p), clipped to [clip, 1-clip]",
+ "eigenvalues": [2.56802, 1.86068, 0.27298, 0.17843, 0.11989],
+ "parallel": {"observed": [2.56802, 1.86068, 0.27298, 0.17843, 0.11989], "p95": [1.23769, 1.12534, 1.03916, 0.97539, 0.90451], "keep": 2},
+ "corr": [[1.0, -0.79819, 0.72406, 0.02054, -0.11966], [-0.79819, 1.0, -0.81869, -0.00067, 0.04069], [0.72406, -0.81869, 1.0, -0.06555, -0.0085], [0.02054, -0.00067, -0.06555, 1.0, -0.85814], [-0.11966, 0.04069, -0.0085, -0.85814, 1.0]],
+ "dials": [
+  {"key": "dial_explore", "label": "Explore against stay", "high": "exploring", "low": "staying with old favourites", "traits": ["new_share", "old_friends", "season_turnover"], "weights": [0.35991, -0.37511, 0.36507], "loadings": {"new_share": 0.90834, "old_friends": -0.94494, "season_turnover": 0.91805, "clock_spread": -0.02914, "clock_regularity": -0.05171}, "r_with_full_component_score": 0.9999},
+  {"key": "dial_regular", "label": "Listening-time regularity", "high": "a regular listening time", "low": "listening at any hour", "traits": ["clock_spread", "clock_regularity"], "weights": [-0.52782, 0.52685], "loadings": {"new_share": -0.07108, "old_friends": 0.00991, "season_turnover": 0.04875, "clock_spread": -0.96363, "clock_regularity": 0.96346}, "r_with_full_component_score": 0.99965}
+ ]
+}

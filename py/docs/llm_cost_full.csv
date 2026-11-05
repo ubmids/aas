@@ -1,0 +1,5 @@
+model,requests,input_tokens,usd_expected,usd_upper,usd_expected_batch,price_in_out
+claude-haiku-4-5-20251001,1192,1459090,2.95,5.04,1.47,$1.0/$5.0 per MTok
+claude-haiku-5-5,1192,1891468,0.34,1.38,0.17,$0.1/$0.5 per MTok
+claude-sonnet-5-5,1192,1891468,6.76,10.93,3.38,$2.0/$10.0 per MTok
+local (this laptop),1192,1459090,0.0,0.0,0.0,electricity only

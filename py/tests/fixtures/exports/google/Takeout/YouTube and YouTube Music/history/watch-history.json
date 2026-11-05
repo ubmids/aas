@@ -1,0 +1,34 @@
+[{
+  "header": "YouTube",
+  "title": "Watched Beginner cello lesson 1",
+  "titleUrl": "https://www.youtube.com/watch?v=AAAAAAAAAAA",
+  "subtitles": [{
+    "name": "Made Up Strings Channel",
+    "url": "https://www.youtube.com/channel/UC000000000000000000000"
+  }],
+  "time": "2024-02-11T21:00:00.000Z",
+  "products": ["YouTube"],
+  "activityControls": ["YouTube watch history"]
+},{
+  "header": "YouTube",
+  "title": "Watched Some advert",
+  "titleUrl": "https://www.youtube.com/watch?v=BBBBBBBBBBB",
+  "time": "2024-02-11T20:59:00.000Z",
+  "products": ["YouTube"],
+  "details": [{"name": "From Google Ads"}],
+  "activityControls": ["Web & App Activity", "YouTube watch history", "YouTube search history"]
+},{
+  "header": "YouTube",
+  "title": "Watched a video that has been removed",
+  "time": "2023-11-11T10:00:00.000Z",
+  "products": ["YouTube"],
+  "activityControls": ["YouTube watch history"]
+},{
+  "header": "YouTube Music",
+  "title": "Watched Calm Song",
+  "titleUrl": "https://music.youtube.com/watch?v=CCCCCCCCCCC",
+  "subtitles": [{"name": "Imaginary Band - Topic", "url": "https://www.youtube.com/channel/UC111"}],
+  "time": "2024-01-05T07:00:00.000Z",
+  "products": ["YouTube"],
+  "activityControls": ["YouTube watch history"]
+}]

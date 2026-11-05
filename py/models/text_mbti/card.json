@@ -1,0 +1,978 @@
+{
+ "reader": "text-mbti",
+ "version": "1.0.0",
+ "trained": "2026-11-01",
+ "target": "binary",
+ "traits": [
+  "I/E",
+  "N/S",
+  "T/F",
+  "J/P"
+ ],
+ "trait_names": {
+  "I/E": "I/E",
+  "N/S": "N/S",
+  "T/F": "T/F",
+  "J/P": "J/P"
+ },
+ "output_prior": "balanced",
+ "data": {
+  "source": "MBTI PersonalityCafe forum (Kaggle datasnaek/mbti-type), via Hugging Face mirror jingjietan/kaggle-mbti",
+  "url": "https://huggingface.co/datasets/jingjietan/kaggle-mbti",
+  "licence": "mirror tagged Apache-2.0; original Kaggle dataset is CC0 public domain scraped forum text; research use",
+  "short": "8,675 PersonalityCafe forum users",
+  "unit": "forum posts (the last ~50 per user)",
+  "n_people": 8675,
+  "words_per_person_median": 1304,
+  "base_rates": {
+   "I/E": 0.7696,
+   "N/S": 0.862,
+   "T/F": 0.4589,
+   "J/P": 0.3959
+  }
+ },
+ "features": {
+  "recipe": "readers.text.clean() on every item (MBTI strict leak strip + Big Five self-report words + URLs), word counts (unigrams, top 20,000 terms seen in >= 20 people), sublinear TF-IDF, L2-normalised per person; logistic regression per trait; length-aware recalibration fitted on out-of-fold scores at many text lengths",
+  "vocab_size": 13334,
+  "ngram_range": [
+   1,
+   1
+  ],
+  "ref_words": 1304.0,
+  "long_text_cap_words": 1609.0,
+  "penalty": {
+   "I/E": 1.0,
+   "N/S": 1.0,
+   "T/F": 3.0,
+   "J/P": 1.0
+  },
+  "excluded_kinds": [
+   "search"
+  ]
+ },
+ "selection": {
+  "method": "5-fold CV on the 80% dev split only, before any final fit; vectorizer shared, penalty per trait; MiniLM sentence-embedding means scored on the same folds as a challenger",
+  "dev_cv": {
+   "I/E": {
+    "score": 0.7574,
+    "ci_low": 0.7446,
+    "ci_high": 0.7688
+   },
+   "N/S": {
+    "score": 0.7686,
+    "ci_low": 0.753,
+    "ci_high": 0.7843
+   },
+   "T/F": {
+    "score": 0.8776,
+    "ci_low": 0.8692,
+    "ci_high": 0.8852
+   },
+   "J/P": {
+    "score": 0.6814,
+    "ci_low": 0.6685,
+    "ci_high": 0.6947
+   }
+  },
+  "emb_best_dev_cv": {
+   "I/E": 0.7097,
+   "N/S": 0.6981,
+   "T/F": 0.8264,
+   "J/P": 0.6215
+  },
+  "chosen_vectorizer": "uni"
+ },
+ "test": {
+  "n": 1735,
+  "full": {
+   "I/E": {
+    "score": 0.7868,
+    "ci_low": 0.7619,
+    "ci_high": 0.8122
+   },
+   "N/S": {
+    "score": 0.778,
+    "ci_low": 0.7457,
+    "ci_high": 0.8094
+   },
+   "T/F": {
+    "score": 0.8778,
+    "ci_low": 0.8604,
+    "ci_high": 0.8939
+   },
+   "J/P": {
+    "score": 0.7093,
+    "ci_low": 0.6854,
+    "ci_high": 0.7341
+   }
+  },
+  "calibration": {
+   "I/E": {
+    "ece": 0.0275,
+    "ece_uncalibrated": 0.0648,
+    "ece_noise_floor": 0.0209,
+    "brier": 0.1441,
+    "brier_base_rate": 0.1777,
+    "reliability": [
+     {
+      "bin": "0.0-0.1",
+      "n": 1,
+      "mean_pred": 0.094,
+      "observed": 0.0
+     },
+     {
+      "bin": "0.1-0.2",
+      "n": 10,
+      "mean_pred": 0.163,
+      "observed": 0.1
+     },
+     {
+      "bin": "0.2-0.3",
+      "n": 32,
+      "mean_pred": 0.255,
+      "observed": 0.281
+     },
+     {
+      "bin": "0.3-0.4",
+      "n": 59,
+      "mean_pred": 0.354,
+      "observed": 0.458
+     },
+     {
+      "bin": "0.4-0.5",
+      "n": 85,
+      "mean_pred": 0.453,
+      "observed": 0.518
+     },
+     {
+      "bin": "0.5-0.6",
+      "n": 129,
+      "mean_pred": 0.554,
+      "observed": 0.496
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 200,
+      "mean_pred": 0.655,
+      "observed": 0.59
+     },
+     {
+      "bin": "0.7-0.8",
+      "n": 271,
+      "mean_pred": 0.757,
+      "observed": 0.753
+     },
+     {
+      "bin": "0.8-0.9",
+      "n": 441,
+      "mean_pred": 0.854,
+      "observed": 0.868
+     },
+     {
+      "bin": "0.9-1.0",
+      "n": 507,
+      "mean_pred": 0.942,
+      "observed": 0.955
+     }
+    ]
+   },
+   "N/S": {
+    "ece": 0.0213,
+    "ece_uncalibrated": 0.0416,
+    "ece_noise_floor": 0.0146,
+    "brier": 0.1017,
+    "brier_base_rate": 0.1192,
+    "reliability": [
+     {
+      "bin": "0.1-0.2",
+      "n": 1,
+      "mean_pred": 0.139,
+      "observed": 1.0
+     },
+     {
+      "bin": "0.2-0.3",
+      "n": 8,
+      "mean_pred": 0.253,
+      "observed": 0.25
+     },
+     {
+      "bin": "0.3-0.4",
+      "n": 12,
+      "mean_pred": 0.365,
+      "observed": 0.417
+     },
+     {
+      "bin": "0.4-0.5",
+      "n": 18,
+      "mean_pred": 0.457,
+      "observed": 0.444
+     },
+     {
+      "bin": "0.5-0.6",
+      "n": 39,
+      "mean_pred": 0.559,
+      "observed": 0.436
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 74,
+      "mean_pred": 0.654,
+      "observed": 0.581
+     },
+     {
+      "bin": "0.7-0.8",
+      "n": 159,
+      "mean_pred": 0.759,
+      "observed": 0.748
+     },
+     {
+      "bin": "0.8-0.9",
+      "n": 385,
+      "mean_pred": 0.859,
+      "observed": 0.826
+     },
+     {
+      "bin": "0.9-1.0",
+      "n": 1039,
+      "mean_pred": 0.955,
+      "observed": 0.945
+     }
+    ]
+   },
+   "T/F": {
+    "ece": 0.027,
+    "ece_uncalibrated": 0.0408,
+    "ece_noise_floor": 0.0215,
+    "brier": 0.1417,
+    "brier_base_rate": 0.2483,
+    "reliability": [
+     {
+      "bin": "0.0-0.1",
+      "n": 434,
+      "mean_pred": 0.04,
+      "observed": 0.058
+     },
+     {
+      "bin": "0.1-0.2",
+      "n": 186,
+      "mean_pred": 0.148,
+      "observed": 0.167
+     },
+     {
+      "bin": "0.2-0.3",
+      "n": 139,
+      "mean_pred": 0.249,
+      "observed": 0.288
+     },
+     {
+      "bin": "0.3-0.4",
+      "n": 101,
+      "mean_pred": 0.35,
+      "observed": 0.406
+     },
+     {
+      "bin": "0.4-0.5",
+      "n": 97,
+      "mean_pred": 0.45,
+      "observed": 0.526
+     },
+     {
+      "bin": "0.5-0.6",
+      "n": 108,
+      "mean_pred": 0.552,
+      "observed": 0.537
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 100,
+      "mean_pred": 0.647,
+      "observed": 0.66
+     },
+     {
+      "bin": "0.7-0.8",
+      "n": 136,
+      "mean_pred": 0.752,
+      "observed": 0.75
+     },
+     {
+      "bin": "0.8-0.9",
+      "n": 173,
+      "mean_pred": 0.856,
+      "observed": 0.815
+     },
+     {
+      "bin": "0.9-1.0",
+      "n": 261,
+      "mean_pred": 0.95,
+      "observed": 0.923
+     }
+    ]
+   },
+   "J/P": {
+    "ece": 0.0244,
+    "ece_uncalibrated": 0.0415,
+    "ece_noise_floor": 0.0243,
+    "brier": 0.2082,
+    "brier_base_rate": 0.2392,
+    "reliability": [
+     {
+      "bin": "0.0-0.1",
+      "n": 19,
+      "mean_pred": 0.076,
+      "observed": 0.0
+     },
+     {
+      "bin": "0.1-0.2",
+      "n": 186,
+      "mean_pred": 0.16,
+      "observed": 0.124
+     },
+     {
+      "bin": "0.2-0.3",
+      "n": 304,
+      "mean_pred": 0.253,
+      "observed": 0.243
+     },
+     {
+      "bin": "0.3-0.4",
+      "n": 343,
+      "mean_pred": 0.349,
+      "observed": 0.356
+     },
+     {
+      "bin": "0.4-0.5",
+      "n": 335,
+      "mean_pred": 0.449,
+      "observed": 0.409
+     },
+     {
+      "bin": "0.5-0.6",
+      "n": 256,
+      "mean_pred": 0.546,
+      "observed": 0.535
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 174,
+      "mean_pred": 0.645,
+      "observed": 0.592
+     },
+     {
+      "bin": "0.7-0.8",
+      "n": 96,
+      "mean_pred": 0.741,
+      "observed": 0.729
+     },
+     {
+      "bin": "0.8-0.9",
+      "n": 22,
+      "mean_pred": 0.84,
+      "observed": 0.955
+     }
+    ]
+   }
+  }
+ },
+ "min_text": {
+  "recommended_words": 800,
+  "floor_words": 100,
+  "rule": "recommended = smallest length whose mean AUC is within 0.03 of the same test people's full-text AUC (and stays so at every longer length); floor = smallest length that keeps at least 50% of the full-text lift above chance (0.5). Below the floor the reader says nothing.",
+  "mean_drop_by_k": {
+   "25": 0.1961,
+   "50": 0.1711,
+   "100": 0.1421,
+   "150": 0.1214,
+   "200": 0.1051,
+   "300": 0.0773,
+   "400": 0.0648,
+   "600": 0.0393,
+   "800": 0.0239,
+   "1200": 0.0084
+  },
+  "share_of_lift_by_k": {
+   "25": 0.319,
+   "50": 0.406,
+   "100": 0.507,
+   "150": 0.579,
+   "200": 0.635,
+   "300": 0.733,
+   "400": 0.776,
+   "600": 0.865,
+   "800": 0.918,
+   "1200": 0.972
+  },
+  "curve": [
+   {
+    "words": 25,
+    "n": 1734,
+    "auc": {
+     "I/E": 0.5936,
+     "N/S": 0.5774,
+     "T/F": 0.637,
+     "J/P": 0.5596
+    },
+    "auc_full_same_people": {
+     "I/E": 0.787,
+     "N/S": 0.7779,
+     "T/F": 0.8778,
+     "J/P": 0.7094
+    },
+    "ece": {
+     "I/E": 0.0106,
+     "N/S": 0.0147,
+     "T/F": 0.0395,
+     "J/P": 0.0111
+    }
+   },
+   {
+    "words": 50,
+    "n": 1733,
+    "auc": {
+     "I/E": 0.619,
+     "N/S": 0.6016,
+     "T/F": 0.6722,
+     "J/P": 0.5749
+    },
+    "auc_full_same_people": {
+     "I/E": 0.787,
+     "N/S": 0.778,
+     "T/F": 0.8777,
+     "J/P": 0.7095
+    },
+    "ece": {
+     "I/E": 0.0113,
+     "N/S": 0.0096,
+     "T/F": 0.0229,
+     "J/P": 0.0107
+    }
+   },
+   {
+    "words": 100,
+    "n": 1732,
+    "auc": {
+     "I/E": 0.6499,
+     "N/S": 0.6239,
+     "T/F": 0.7132,
+     "J/P": 0.5968
+    },
+    "auc_full_same_people": {
+     "I/E": 0.7869,
+     "N/S": 0.778,
+     "T/F": 0.8778,
+     "J/P": 0.7095
+    },
+    "ece": {
+     "I/E": 0.0157,
+     "N/S": 0.0209,
+     "T/F": 0.0279,
+     "J/P": 0.0117
+    }
+   },
+   {
+    "words": 150,
+    "n": 1731,
+    "auc": {
+     "I/E": 0.6622,
+     "N/S": 0.6473,
+     "T/F": 0.7449,
+     "J/P": 0.613
+    },
+    "auc_full_same_people": {
+     "I/E": 0.7868,
+     "N/S": 0.7783,
+     "T/F": 0.8784,
+     "J/P": 0.7095
+    },
+    "ece": {
+     "I/E": 0.0176,
+     "N/S": 0.0257,
+     "T/F": 0.029,
+     "J/P": 0.0142
+    }
+   },
+   {
+    "words": 200,
+    "n": 1730,
+    "auc": {
+     "I/E": 0.6861,
+     "N/S": 0.6573,
+     "T/F": 0.7642,
+     "J/P": 0.6253
+    },
+    "auc_full_same_people": {
+     "I/E": 0.7869,
+     "N/S": 0.7784,
+     "T/F": 0.8784,
+     "J/P": 0.7098
+    },
+    "ece": {
+     "I/E": 0.0192,
+     "N/S": 0.0274,
+     "T/F": 0.031,
+     "J/P": 0.0169
+    }
+   },
+   {
+    "words": 300,
+    "n": 1724,
+    "auc": {
+     "I/E": 0.71,
+     "N/S": 0.691,
+     "T/F": 0.8026,
+     "J/P": 0.6434
+    },
+    "auc_full_same_people": {
+     "I/E": 0.7867,
+     "N/S": 0.7794,
+     "T/F": 0.8796,
+     "J/P": 0.7104
+    },
+    "ece": {
+     "I/E": 0.019,
+     "N/S": 0.0281,
+     "T/F": 0.0314,
+     "J/P": 0.02
+    }
+   },
+   {
+    "words": 400,
+    "n": 1716,
+    "auc": {
+     "I/E": 0.7238,
+     "N/S": 0.6961,
+     "T/F": 0.8219,
+     "J/P": 0.656
+    },
+    "auc_full_same_people": {
+     "I/E": 0.7883,
+     "N/S": 0.7792,
+     "T/F": 0.8804,
+     "J/P": 0.7093
+    },
+    "ece": {
+     "I/E": 0.0199,
+     "N/S": 0.026,
+     "T/F": 0.0289,
+     "J/P": 0.0181
+    }
+   },
+   {
+    "words": 600,
+    "n": 1659,
+    "auc": {
+     "I/E": 0.7509,
+     "N/S": 0.733,
+     "T/F": 0.846,
+     "J/P": 0.6771
+    },
+    "auc_full_same_people": {
+     "I/E": 0.7909,
+     "N/S": 0.7818,
+     "T/F": 0.8819,
+     "J/P": 0.7096
+    },
+    "ece": {
+     "I/E": 0.0247,
+     "N/S": 0.0178,
+     "T/F": 0.0278,
+     "J/P": 0.0205
+    }
+   },
+   {
+    "words": 800,
+    "n": 1574,
+    "auc": {
+     "I/E": 0.7614,
+     "N/S": 0.757,
+     "T/F": 0.8622,
+     "J/P": 0.6934
+    },
+    "auc_full_same_people": {
+     "I/E": 0.7874,
+     "N/S": 0.786,
+     "T/F": 0.8833,
+     "J/P": 0.7127
+    },
+    "ece": {
+     "I/E": 0.0264,
+     "N/S": 0.0137,
+     "T/F": 0.0237,
+     "J/P": 0.0226
+    }
+   },
+   {
+    "words": 1200,
+    "n": 1108,
+    "auc": {
+     "I/E": 0.7896,
+     "N/S": 0.783,
+     "T/F": 0.883,
+     "J/P": 0.7215
+    },
+    "auc_full_same_people": {
+     "I/E": 0.7958,
+     "N/S": 0.7939,
+     "T/F": 0.8903,
+     "J/P": 0.7308
+    },
+    "ece": {
+     "I/E": 0.028,
+     "N/S": 0.016,
+     "T/F": 0.0283,
+     "J/P": 0.0348
+    }
+   },
+   {
+    "words": 1303,
+    "n": 1735,
+    "auc": {
+     "I/E": 0.7868,
+     "N/S": 0.778,
+     "T/F": 0.8778,
+     "J/P": 0.7093
+    },
+    "auc_full_same_people": {
+     "I/E": 0.7868,
+     "N/S": 0.778,
+     "T/F": 0.8778,
+     "J/P": 0.7093
+    },
+    "ece": {
+     "I/E": 0.0275,
+     "N/S": 0.0213,
+     "T/F": 0.027,
+     "J/P": 0.0244
+    }
+   }
+  ]
+ },
+ "interval": "80% bootstrap range of P over the person's own items",
+ "split": {
+  "dev": 6940,
+  "test": 1735,
+  "seed": 0
+ },
+ "cross_domain": {
+  "tested_on": "Essays (Big Five median-split labels)",
+  "note": "Model applied to another dataset and scored against the loosely related trait there (I~low E, N~O, F~A, J~C; |r| about 0.4-0.7 between the systems, McCrae & Costa 1989). Both a change of writing genre and a change of construct, so this is a lower bound on transfer.",
+  "auc": {
+   "I/E -> E": {
+    "auc": 0.584,
+    "ci_low": 0.5631,
+    "ci_high": 0.6059,
+    "n": 2467
+   },
+   "N/S -> O": {
+    "auc": 0.5889,
+    "ci_low": 0.5636,
+    "ci_high": 0.6117,
+    "n": 2467
+   },
+   "T/F -> A": {
+    "auc": 0.552,
+    "ci_low": 0.5303,
+    "ci_high": 0.5751,
+    "n": 2467
+   },
+   "J/P -> C": {
+    "auc": 0.5564,
+    "ci_low": 0.5325,
+    "ci_high": 0.5785,
+    "n": 2467
+   }
+  }
+ },
+ "validity_by_source": {
+  "date": "2026-11-01",
+  "what": "Accuracy the reader states for writing that is not from the PersonalityCafe typology forum, which is all writing a real user brings.",
+  "tested_off_forum_with_mbti_labels": false,
+  "why_untested": "No openly downloadable MBTI-labelled writing from outside PersonalityCafe was found (2026-11-01): PANDORA and MBTI9k (Reddit flair) need access requests, Twitter MBTI sets (Plank & Hovy 2015) are tweet IDs only, and the open Hugging Face 'MBTI' sets are PersonalityCafe copies, LLM-made, or of unknown provenance. Nothing was downloaded.",
+  "discount_rule": "Letter accuracy off the forum is INFERRED, not measured: the model's AUC against the linked Big Five trait on 2,467 student essays, turned into r and divided by the published MBTI-Big Five link (McCrae & Costa 1989: .74 E, .72 O, .44 A, .49 C). That keeps about 30 to 55% of the in-domain letter r. The same off-forum number is used for every kind of writing; shorter texts scale its lift by the in-domain length curve.",
+  "essay_min_words": 300,
+  "refuse_below_shown_share": 0.5,
+  "not_shown": [],
+  "sources": {
+   "essay_like": {
+    "in_domain": false,
+    "basis": "inferred off-forum (untested with MBTI labels)",
+    "traits": {
+     "I/E": {
+      "auc": 0.6138,
+      "letter_r": 0.2514,
+      "letter_r_range": [
+       0.189,
+       0.316
+      ],
+      "letter_r_in_domain": 0.6158,
+      "auc_in_domain": 0.7868,
+      "kept_share_of_in_domain_r": 0.408,
+      "from": "essays cross-construct I/E -> E AUC 0.584 [0.5631, 0.6059], n 2467, / link 0.74",
+      "shown": true,
+      "clear_of_chance": true
+     },
+     "N/S": {
+      "auc": 0.6239,
+      "letter_r": 0.2734,
+      "letter_r_range": [
+       0.196,
+       0.343
+      ],
+      "letter_r_in_domain": 0.5981,
+      "auc_in_domain": 0.778,
+      "kept_share_of_in_domain_r": 0.457,
+      "from": "essays cross-construct N/S -> O AUC 0.5889 [0.5636, 0.6117], n 2467, / link 0.72",
+      "shown": true,
+      "clear_of_chance": true
+     },
+     "T/F": {
+      "auc": 0.6187,
+      "letter_r": 0.2622,
+      "letter_r_range": [
+       0.153,
+       0.378
+      ],
+      "letter_r_in_domain": 0.7909,
+      "auc_in_domain": 0.8778,
+      "kept_share_of_in_domain_r": 0.332,
+      "from": "essays cross-construct T/F -> A AUC 0.552 [0.5303, 0.5751], n 2467, / link 0.44",
+      "shown": true,
+      "clear_of_chance": true
+     },
+     "J/P": {
+      "auc": 0.6156,
+      "letter_r": 0.2554,
+      "letter_r_range": [
+       0.147,
+       0.355
+      ],
+      "letter_r_in_domain": 0.4566,
+      "auc_in_domain": 0.7093,
+      "kept_share_of_in_domain_r": 0.559,
+      "from": "essays cross-construct J/P -> C AUC 0.5564 [0.5325, 0.5785], n 2467, / link 0.49",
+      "shown": true,
+      "clear_of_chance": true
+     }
+    }
+   },
+   "tweets": {
+    "in_domain": false,
+    "basis": "inferred off-forum (untested with MBTI labels)",
+    "traits": {
+     "I/E": {
+      "auc": 0.6138,
+      "letter_r": 0.2514,
+      "letter_r_range": [
+       0.189,
+       0.316
+      ],
+      "letter_r_in_domain": 0.6158,
+      "auc_in_domain": 0.7868,
+      "kept_share_of_in_domain_r": 0.408,
+      "from": "essays cross-construct I/E -> E AUC 0.584 [0.5631, 0.6059], n 2467, / link 0.74",
+      "shown": true,
+      "clear_of_chance": true
+     },
+     "N/S": {
+      "auc": 0.6239,
+      "letter_r": 0.2734,
+      "letter_r_range": [
+       0.196,
+       0.343
+      ],
+      "letter_r_in_domain": 0.5981,
+      "auc_in_domain": 0.778,
+      "kept_share_of_in_domain_r": 0.457,
+      "from": "essays cross-construct N/S -> O AUC 0.5889 [0.5636, 0.6117], n 2467, / link 0.72",
+      "shown": true,
+      "clear_of_chance": true
+     },
+     "T/F": {
+      "auc": 0.6187,
+      "letter_r": 0.2622,
+      "letter_r_range": [
+       0.153,
+       0.378
+      ],
+      "letter_r_in_domain": 0.7909,
+      "auc_in_domain": 0.8778,
+      "kept_share_of_in_domain_r": 0.332,
+      "from": "essays cross-construct T/F -> A AUC 0.552 [0.5303, 0.5751], n 2467, / link 0.44",
+      "shown": true,
+      "clear_of_chance": true
+     },
+     "J/P": {
+      "auc": 0.6156,
+      "letter_r": 0.2554,
+      "letter_r_range": [
+       0.147,
+       0.355
+      ],
+      "letter_r_in_domain": 0.4566,
+      "auc_in_domain": 0.7093,
+      "kept_share_of_in_domain_r": 0.559,
+      "from": "essays cross-construct J/P -> C AUC 0.5564 [0.5325, 0.5785], n 2467, / link 0.49",
+      "shown": true,
+      "clear_of_chance": true
+     }
+    }
+   },
+   "other_prose": {
+    "in_domain": false,
+    "basis": "inferred off-forum (untested with MBTI labels)",
+    "traits": {
+     "I/E": {
+      "auc": 0.6138,
+      "letter_r": 0.2514,
+      "letter_r_range": [
+       0.189,
+       0.316
+      ],
+      "letter_r_in_domain": 0.6158,
+      "auc_in_domain": 0.7868,
+      "kept_share_of_in_domain_r": 0.408,
+      "from": "essays cross-construct I/E -> E AUC 0.584 [0.5631, 0.6059], n 2467, / link 0.74",
+      "shown": true,
+      "clear_of_chance": true
+     },
+     "N/S": {
+      "auc": 0.6239,
+      "letter_r": 0.2734,
+      "letter_r_range": [
+       0.196,
+       0.343
+      ],
+      "letter_r_in_domain": 0.5981,
+      "auc_in_domain": 0.778,
+      "kept_share_of_in_domain_r": 0.457,
+      "from": "essays cross-construct N/S -> O AUC 0.5889 [0.5636, 0.6117], n 2467, / link 0.72",
+      "shown": true,
+      "clear_of_chance": true
+     },
+     "T/F": {
+      "auc": 0.6187,
+      "letter_r": 0.2622,
+      "letter_r_range": [
+       0.153,
+       0.378
+      ],
+      "letter_r_in_domain": 0.7909,
+      "auc_in_domain": 0.8778,
+      "kept_share_of_in_domain_r": 0.332,
+      "from": "essays cross-construct T/F -> A AUC 0.552 [0.5303, 0.5751], n 2467, / link 0.44",
+      "shown": true,
+      "clear_of_chance": true
+     },
+     "J/P": {
+      "auc": 0.6156,
+      "letter_r": 0.2554,
+      "letter_r_range": [
+       0.147,
+       0.355
+      ],
+      "letter_r_in_domain": 0.4566,
+      "auc_in_domain": 0.7093,
+      "kept_share_of_in_domain_r": 0.559,
+      "from": "essays cross-construct J/P -> C AUC 0.5564 [0.5325, 0.5785], n 2467, / link 0.49",
+      "shown": true,
+      "clear_of_chance": true
+     }
+    }
+   }
+  },
+  "spot_checks_cross_construct": {
+   "what": "same probe on the held-out Big Five domains (model raw score vs the linked trait's median split / continuous score). Noisy (n 294 to 711) and observer-rated for vlogs and Friends; reported, not used.",
+   "pan15": {
+    "I/E -> E": {
+     "auc": 0.5751,
+     "auc_lo": 0.4988,
+     "auc_hi": 0.6493,
+     "p_auc": 0.021,
+     "r": 0.0342
+    },
+    "N/S -> O": {
+     "auc": 0.5408,
+     "auc_lo": 0.4768,
+     "auc_hi": 0.606,
+     "p_auc": 0.1119,
+     "r": 0.0635
+    },
+    "T/F -> A": {
+     "auc": 0.5615,
+     "auc_lo": 0.5001,
+     "auc_hi": 0.6244,
+     "p_auc": 0.038,
+     "r": -0.0212
+    },
+    "J/P -> C": {
+     "auc": 0.4758,
+     "auc_lo": 0.4059,
+     "auc_hi": 0.5507,
+     "p_auc": 0.7562,
+     "r": 0.1637
+    },
+    "n": 294,
+    "label_kind": "self-report BFI-10 (continuous; N = -stable)"
+   },
+   "vlogs": {
+    "I/E -> E": {
+     "auc": 0.6423,
+     "auc_lo": 0.5874,
+     "auc_hi": 0.6898,
+     "p_auc": 0.001,
+     "r": 0.297
+    },
+    "N/S -> O": {
+     "auc": 0.5183,
+     "auc_lo": 0.4604,
+     "auc_hi": 0.5734,
+     "p_auc": 0.2707,
+     "r": 0.0259
+    },
+    "T/F -> A": {
+     "auc": 0.6319,
+     "auc_lo": 0.5734,
+     "auc_hi": 0.6864,
+     "p_auc": 0.001,
+     "r": 0.2577
+    },
+    "J/P -> C": {
+     "auc": 0.6092,
+     "auc_lo": 0.5536,
+     "auc_hi": 0.6649,
+     "p_auc": 0.001,
+     "r": 0.2948
+    },
+    "n": 404,
+    "label_kind": "observer-rated impressions from watching the vlog (MTurk, continuous 1-7; N = -stability)"
+   },
+   "friends": {
+    "I/E -> E": {
+     "auc": 0.4767,
+     "auc_lo": 0.4261,
+     "auc_hi": 0.5089,
+     "p_auc": 0.8482
+    },
+    "N/S -> O": {
+     "auc": 0.4937,
+     "auc_lo": 0.4444,
+     "auc_hi": 0.5434,
+     "p_auc": 0.6094
+    },
+    "T/F -> A": {
+     "auc": 0.4473,
+     "auc_lo": 0.4022,
+     "auc_hi": 0.4902,
+     "p_auc": 0.997
+    },
+    "J/P -> C": {
+     "auc": 0.4844,
+     "auc_lo": 0.4365,
+     "auc_hi": 0.5356,
+     "p_auc": 0.7752
+    },
+    "n": 711,
+    "label_kind": "observer-rated (3 annotators, from the scene's dialogue), yes/no median split (released that way)"
+   }
+  }
+ }
+}

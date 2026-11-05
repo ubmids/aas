@@ -1,0 +1,1065 @@
+{
+ "reader": "text-bigfive",
+ "version": "1.0.0",
+ "trained": "2026-11-01",
+ "target": "binary_median",
+ "traits": [
+  "O",
+  "C",
+  "E",
+  "A",
+  "N"
+ ],
+ "trait_names": {
+  "O": "openness",
+  "C": "conscientiousness",
+  "E": "extraversion",
+  "A": "agreeableness",
+  "N": "neuroticism"
+ },
+ "output_prior": "median",
+ "data": {
+  "source": "Pennebaker & King (1999) stream-of-consciousness Essays, University of Texas students 1997-2004, Big Five median-split labels (cEXT/cNEU/cAGR/cCON/cOPN = y/n), as distributed with Mairesse et al. (2007) and mirrored in the SenticNet personality-detection repo (Majumder et al. 2017)",
+  "url": "https://raw.githubusercontent.com/SenticNet/personality-detection/master/essays.csv",
+  "sha256": "3e0ec809f1ca98c6ecdd15b688af4006a28931e226537619fc414238c3f7bc7f",
+  "licence": "research dataset; no explicit data licence (the mirror repo's MIT licence covers its code). Cite Pennebaker & King (1999), J Pers Soc Psychol 77(6):1296. Not for commercial use without checking.",
+  "short": "2,467 student essays (Pennebaker & King 1999)",
+  "unit": "one ~650-word stream-of-consciousness essay per person, cut into 20-word pieces",
+  "n_people": 2467,
+  "words_per_person_median": 626,
+  "base_rates": {
+   "O": 0.5152,
+   "C": 0.5079,
+   "E": 0.5172,
+   "A": 0.531,
+   "N": 0.4998
+  }
+ },
+ "features": {
+  "recipe": "readers.text.clean() on every item (MBTI strict leak strip + Big Five self-report words + URLs), word counts (unigrams + bigrams, top 20,000 terms seen in >= 5 people), sublinear TF-IDF, L2-normalised per person; logistic regression per trait; length-aware recalibration fitted on out-of-fold scores at many text lengths",
+  "vocab_size": 20000,
+  "ngram_range": [
+   1,
+   2
+  ],
+  "ref_words": 626.0,
+  "long_text_cap_words": 976.0,
+  "penalty": {
+   "O": 0.1,
+   "C": 1.0,
+   "E": 1.0,
+   "A": 0.3,
+   "N": 0.3
+  },
+  "excluded_kinds": [
+   "search"
+  ]
+ },
+ "selection": {
+  "method": "5-fold CV on the 80% dev split only, before any final fit; vectorizer shared, penalty per trait; MiniLM sentence-embedding means scored on the same folds as a challenger",
+  "dev_cv": {
+   "O": {
+    "score": 0.67,
+    "ci_low": 0.6441,
+    "ci_high": 0.694
+   },
+   "C": {
+    "score": 0.6119,
+    "ci_low": 0.5864,
+    "ci_high": 0.6368
+   },
+   "E": {
+    "score": 0.6078,
+    "ci_low": 0.5821,
+    "ci_high": 0.6329
+   },
+   "A": {
+    "score": 0.5687,
+    "ci_low": 0.5424,
+    "ci_high": 0.5952
+   },
+   "N": {
+    "score": 0.6155,
+    "ci_low": 0.5898,
+    "ci_high": 0.6401
+   }
+  },
+  "emb_best_dev_cv": {
+   "O": 0.666,
+   "C": 0.5829,
+   "E": 0.6054,
+   "A": 0.5539,
+   "N": 0.5892
+  },
+  "chosen_vectorizer": "uni+bi"
+ },
+ "test": {
+  "n": 494,
+  "full": {
+   "O": {
+    "score": 0.6817,
+    "ci_low": 0.6333,
+    "ci_high": 0.7303
+   },
+   "C": {
+    "score": 0.5729,
+    "ci_low": 0.5199,
+    "ci_high": 0.6269
+   },
+   "E": {
+    "score": 0.594,
+    "ci_low": 0.5463,
+    "ci_high": 0.6447
+   },
+   "A": {
+    "score": 0.5839,
+    "ci_low": 0.5334,
+    "ci_high": 0.6381
+   },
+   "N": {
+    "score": 0.585,
+    "ci_low": 0.5347,
+    "ci_high": 0.6317
+   }
+  },
+  "calibration": {
+   "O": {
+    "ece": 0.0433,
+    "ece_uncalibrated": 0.1011,
+    "ece_noise_floor": 0.0441,
+    "brier": 0.2255,
+    "brier_base_rate": 0.2497,
+    "reliability": [
+     {
+      "bin": "0.0-0.1",
+      "n": 2,
+      "mean_pred": 0.091,
+      "observed": 0.0
+     },
+     {
+      "bin": "0.1-0.2",
+      "n": 16,
+      "mean_pred": 0.163,
+      "observed": 0.188
+     },
+     {
+      "bin": "0.2-0.3",
+      "n": 47,
+      "mean_pred": 0.255,
+      "observed": 0.234
+     },
+     {
+      "bin": "0.3-0.4",
+      "n": 83,
+      "mean_pred": 0.352,
+      "observed": 0.386
+     },
+     {
+      "bin": "0.4-0.5",
+      "n": 81,
+      "mean_pred": 0.441,
+      "observed": 0.543
+     },
+     {
+      "bin": "0.5-0.6",
+      "n": 96,
+      "mean_pred": 0.55,
+      "observed": 0.5
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 81,
+      "mean_pred": 0.652,
+      "observed": 0.642
+     },
+     {
+      "bin": "0.7-0.8",
+      "n": 63,
+      "mean_pred": 0.746,
+      "observed": 0.714
+     },
+     {
+      "bin": "0.8-0.9",
+      "n": 24,
+      "mean_pred": 0.837,
+      "observed": 0.792
+     },
+     {
+      "bin": "0.9-1.0",
+      "n": 1,
+      "mean_pred": 0.918,
+      "observed": 1.0
+     }
+    ]
+   },
+   "C": {
+    "ece": 0.0642,
+    "ece_uncalibrated": 0.0339,
+    "ece_noise_floor": 0.0396,
+    "brier": 0.2461,
+    "brier_base_rate": 0.25,
+    "reliability": [
+     {
+      "bin": "0.2-0.3",
+      "n": 6,
+      "mean_pred": 0.258,
+      "observed": 0.167
+     },
+     {
+      "bin": "0.3-0.4",
+      "n": 44,
+      "mean_pred": 0.357,
+      "observed": 0.318
+     },
+     {
+      "bin": "0.4-0.5",
+      "n": 138,
+      "mean_pred": 0.454,
+      "observed": 0.514
+     },
+     {
+      "bin": "0.5-0.6",
+      "n": 172,
+      "mean_pred": 0.55,
+      "observed": 0.506
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 104,
+      "mean_pred": 0.638,
+      "observed": 0.519
+     },
+     {
+      "bin": "0.7-0.8",
+      "n": 30,
+      "mean_pred": 0.731,
+      "observed": 0.767
+     }
+    ]
+   },
+   "E": {
+    "ece": 0.0219,
+    "ece_uncalibrated": 0.0231,
+    "ece_noise_floor": 0.0393,
+    "brier": 0.2427,
+    "brier_base_rate": 0.2497,
+    "reliability": [
+     {
+      "bin": "0.2-0.3",
+      "n": 7,
+      "mean_pred": 0.266,
+      "observed": 0.286
+     },
+     {
+      "bin": "0.3-0.4",
+      "n": 54,
+      "mean_pred": 0.36,
+      "observed": 0.389
+     },
+     {
+      "bin": "0.4-0.5",
+      "n": 150,
+      "mean_pred": 0.454,
+      "observed": 0.46
+     },
+     {
+      "bin": "0.5-0.6",
+      "n": 156,
+      "mean_pred": 0.546,
+      "observed": 0.551
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 103,
+      "mean_pred": 0.641,
+      "observed": 0.573
+     },
+     {
+      "bin": "0.7-0.8",
+      "n": 24,
+      "mean_pred": 0.735,
+      "observed": 0.75
+     }
+    ]
+   },
+   "A": {
+    "ece": 0.0178,
+    "ece_uncalibrated": 0.0235,
+    "ece_noise_floor": 0.0349,
+    "brier": 0.2437,
+    "brier_base_rate": 0.2488,
+    "reliability": [
+     {
+      "bin": "0.3-0.4",
+      "n": 8,
+      "mean_pred": 0.378,
+      "observed": 0.5
+     },
+     {
+      "bin": "0.4-0.5",
+      "n": 134,
+      "mean_pred": 0.46,
+      "observed": 0.448
+     },
+     {
+      "bin": "0.5-0.6",
+      "n": 236,
+      "mean_pred": 0.552,
+      "observed": 0.538
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 107,
+      "mean_pred": 0.639,
+      "observed": 0.617
+     },
+     {
+      "bin": "0.7-0.8",
+      "n": 9,
+      "mean_pred": 0.71,
+      "observed": 0.778
+     }
+    ]
+   },
+   "N": {
+    "ece": 0.0638,
+    "ece_uncalibrated": 0.0198,
+    "ece_noise_floor": 0.0416,
+    "brier": 0.246,
+    "brier_base_rate": 0.25,
+    "reliability": [
+     {
+      "bin": "0.2-0.3",
+      "n": 20,
+      "mean_pred": 0.263,
+      "observed": 0.35
+     },
+     {
+      "bin": "0.3-0.4",
+      "n": 88,
+      "mean_pred": 0.36,
+      "observed": 0.409
+     },
+     {
+      "bin": "0.4-0.5",
+      "n": 160,
+      "mean_pred": 0.454,
+      "observed": 0.494
+     },
+     {
+      "bin": "0.5-0.6",
+      "n": 127,
+      "mean_pred": 0.547,
+      "observed": 0.457
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 73,
+      "mean_pred": 0.643,
+      "observed": 0.699
+     },
+     {
+      "bin": "0.7-0.8",
+      "n": 24,
+      "mean_pred": 0.747,
+      "observed": 0.625
+     },
+     {
+      "bin": "0.8-0.9",
+      "n": 2,
+      "mean_pred": 0.831,
+      "observed": 0.5
+     }
+    ]
+   }
+  }
+ },
+ "min_text": {
+  "recommended_words": 100,
+  "floor_words": 25,
+  "rule": "recommended = smallest length whose mean AUC is within 0.03 of the same test people's full-text AUC (and stays so at every longer length); floor = smallest length that keeps at least 50% of the full-text lift above chance (0.5). Below the floor the reader says nothing.",
+  "mean_drop_by_k": {
+   "25": 0.0435,
+   "50": 0.0399,
+   "100": 0.0276,
+   "150": 0.0196,
+   "200": 0.0095,
+   "300": 0.0062,
+   "400": 0.0026,
+   "500": 0.0013
+  },
+  "share_of_lift_by_k": {
+   "25": 0.58,
+   "50": 0.615,
+   "100": 0.734,
+   "150": 0.812,
+   "200": 0.909,
+   "300": 0.942,
+   "400": 0.975,
+   "500": 0.987
+  },
+  "curve": [
+   {
+    "words": 25,
+    "n": 494,
+    "auc": {
+     "O": 0.6069,
+     "C": 0.5478,
+     "E": 0.5534,
+     "A": 0.5496,
+     "N": 0.5425
+    },
+    "auc_full_same_people": {
+     "O": 0.6817,
+     "C": 0.5729,
+     "E": 0.594,
+     "A": 0.5839,
+     "N": 0.585
+    },
+    "r_implied": {
+     "O": 0.2372,
+     "C": 0.1069,
+     "E": 0.1192,
+     "A": 0.1109,
+     "N": 0.095
+    },
+    "ece": {
+     "O": 0.0398,
+     "C": 0.0268,
+     "E": 0.0202,
+     "A": 0.0064,
+     "N": 0.0242
+    }
+   },
+   {
+    "words": 50,
+    "n": 494,
+    "auc": {
+     "O": 0.6193,
+     "C": 0.5494,
+     "E": 0.5503,
+     "A": 0.549,
+     "N": 0.5501
+    },
+    "auc_full_same_people": {
+     "O": 0.6817,
+     "C": 0.5729,
+     "E": 0.594,
+     "A": 0.5839,
+     "N": 0.585
+    },
+    "r_implied": {
+     "O": 0.2643,
+     "C": 0.1103,
+     "E": 0.1125,
+     "A": 0.1096,
+     "N": 0.112
+    },
+    "ece": {
+     "O": 0.0378,
+     "C": 0.0243,
+     "E": 0.0297,
+     "A": 0.0135,
+     "N": 0.0219
+    }
+   },
+   {
+    "words": 100,
+    "n": 494,
+    "auc": {
+     "O": 0.6433,
+     "C": 0.56,
+     "E": 0.562,
+     "A": 0.5711,
+     "N": 0.5433
+    },
+    "auc_full_same_people": {
+     "O": 0.6817,
+     "C": 0.5729,
+     "E": 0.594,
+     "A": 0.5839,
+     "N": 0.585
+    },
+    "r_implied": {
+     "O": 0.3164,
+     "C": 0.1339,
+     "E": 0.1383,
+     "A": 0.1585,
+     "N": 0.0969
+    },
+    "ece": {
+     "O": 0.0343,
+     "C": 0.037,
+     "E": 0.0168,
+     "A": 0.0285,
+     "N": 0.0316
+    }
+   },
+   {
+    "words": 150,
+    "n": 493,
+    "auc": {
+     "O": 0.6547,
+     "C": 0.5763,
+     "E": 0.5587,
+     "A": 0.5796,
+     "N": 0.5534
+    },
+    "auc_full_same_people": {
+     "O": 0.6837,
+     "C": 0.5727,
+     "E": 0.5941,
+     "A": 0.5836,
+     "N": 0.5864
+    },
+    "r_implied": {
+     "O": 0.341,
+     "C": 0.1698,
+     "E": 0.131,
+     "A": 0.1772,
+     "N": 0.1192
+    },
+    "ece": {
+     "O": 0.032,
+     "C": 0.0314,
+     "E": 0.0339,
+     "A": 0.0237,
+     "N": 0.0335
+    }
+   },
+   {
+    "words": 200,
+    "n": 491,
+    "auc": {
+     "O": 0.6673,
+     "C": 0.5932,
+     "E": 0.5729,
+     "A": 0.5783,
+     "N": 0.5643
+    },
+    "auc_full_same_people": {
+     "O": 0.685,
+     "C": 0.5729,
+     "E": 0.5948,
+     "A": 0.5842,
+     "N": 0.5865
+    },
+    "r_implied": {
+     "O": 0.3678,
+     "C": 0.2071,
+     "E": 0.1623,
+     "A": 0.1744,
+     "N": 0.1434
+    },
+    "ece": {
+     "O": 0.0347,
+     "C": 0.026,
+     "E": 0.0301,
+     "A": 0.017,
+     "N": 0.0292
+    }
+   },
+   {
+    "words": 300,
+    "n": 458,
+    "auc": {
+     "O": 0.674,
+     "C": 0.5862,
+     "E": 0.5903,
+     "A": 0.5762,
+     "N": 0.5807
+    },
+    "auc_full_same_people": {
+     "O": 0.6893,
+     "C": 0.5744,
+     "E": 0.6022,
+     "A": 0.582,
+     "N": 0.5907
+    },
+    "r_implied": {
+     "O": 0.3823,
+     "C": 0.1917,
+     "E": 0.2007,
+     "A": 0.1696,
+     "N": 0.1797
+    },
+    "ece": {
+     "O": 0.0358,
+     "C": 0.0367,
+     "E": 0.0412,
+     "A": 0.0307,
+     "N": 0.0423
+    }
+   },
+   {
+    "words": 400,
+    "n": 407,
+    "auc": {
+     "O": 0.6802,
+     "C": 0.5786,
+     "E": 0.588,
+     "A": 0.5887,
+     "N": 0.5824
+    },
+    "auc_full_same_people": {
+     "O": 0.6876,
+     "C": 0.5664,
+     "E": 0.6011,
+     "A": 0.5829,
+     "N": 0.593
+    },
+    "r_implied": {
+     "O": 0.3955,
+     "C": 0.1749,
+     "E": 0.1957,
+     "A": 0.1972,
+     "N": 0.1834
+    },
+    "ece": {
+     "O": 0.0379,
+     "C": 0.0556,
+     "E": 0.0332,
+     "A": 0.0361,
+     "N": 0.045
+    }
+   },
+   {
+    "words": 500,
+    "n": 333,
+    "auc": {
+     "O": 0.6661,
+     "C": 0.5557,
+     "E": 0.6056,
+     "A": 0.5788,
+     "N": 0.5921
+    },
+    "auc_full_same_people": {
+     "O": 0.6729,
+     "C": 0.5443,
+     "E": 0.6135,
+     "A": 0.5756,
+     "N": 0.5984
+    },
+    "r_implied": {
+     "O": 0.3654,
+     "C": 0.1243,
+     "E": 0.2344,
+     "A": 0.1755,
+     "N": 0.2046
+    },
+    "ece": {
+     "O": 0.044,
+     "C": 0.0722,
+     "E": 0.0253,
+     "A": 0.0576,
+     "N": 0.0565
+    }
+   },
+   {
+    "words": 623,
+    "n": 494,
+    "auc": {
+     "O": 0.6817,
+     "C": 0.5729,
+     "E": 0.594,
+     "A": 0.5839,
+     "N": 0.585
+    },
+    "auc_full_same_people": {
+     "O": 0.6817,
+     "C": 0.5729,
+     "E": 0.594,
+     "A": 0.5839,
+     "N": 0.585
+    },
+    "r_implied": {
+     "O": 0.3986,
+     "C": 0.1623,
+     "E": 0.2088,
+     "A": 0.1866,
+     "N": 0.189
+    },
+    "ece": {
+     "O": 0.0433,
+     "C": 0.0642,
+     "E": 0.0219,
+     "A": 0.0178,
+     "N": 0.0638
+    }
+   }
+  ]
+ },
+ "interval": "80% predictive interval for the person's true z: m +- 1.28*sqrt(1 - r^2 + bootstrap variance), r implied by the tested AUC at that length assuming trait and score are jointly normal",
+ "split": {
+  "dev": 1973,
+  "test": 494,
+  "seed": 0
+ },
+ "z_note": "Labels are yes/no (above/below the sample median), so the model outputs P(above median). The z shown is derived, for display: m = sqrt(1 - r^2) * probit(P), r implied by the tested AUC assuming the trait and the model score are jointly normal. It is the expected z given the text, not a measured score.",
+ "cross_domain": {
+  "tested_on": "PersonalityCafe (MBTI letters)",
+  "note": "Model applied to another dataset and scored against the loosely related trait there (I~low E, N~O, F~A, J~C; |r| about 0.4-0.7 between the systems, McCrae & Costa 1989). Both a change of writing genre and a change of construct, so this is a lower bound on transfer.",
+  "auc": {
+   "E -> I/E": {
+    "auc": 0.602,
+    "ci_low": 0.5877,
+    "ci_high": 0.6158,
+    "n": 8675
+   },
+   "O -> N/S": {
+    "auc": 0.5956,
+    "ci_low": 0.5792,
+    "ci_high": 0.6125,
+    "n": 8675
+   },
+   "A -> T/F": {
+    "auc": 0.6653,
+    "ci_low": 0.6536,
+    "ci_high": 0.6763,
+    "n": 8675
+   },
+   "C -> J/P": {
+    "auc": 0.568,
+    "ci_low": 0.5555,
+    "ci_high": 0.5797,
+    "n": 8675
+   }
+  }
+ },
+ "held_out_domains": {
+  "what": "The saved model scored on whole datasets it never saw (other kinds of writing). AUC against each dataset's own median split; r against its continuous scores where released; 95% CI by bootstrap (Friends: resampling characters); null = 95% range of AUC with shuffled labels. Observer-rated domains measure how others see a person, not self-report.",
+  "per_domain": {
+   "friends": {
+    "n": 711,
+    "label_kind": "observer-rated (3 annotators, from the scene's dialogue), yes/no median split (released that way)",
+    "traits": {
+     "O": {
+      "auc": 0.4955,
+      "auc_lo": 0.4212,
+      "auc_hi": 0.5539,
+      "null_auc_lo": 0.458,
+      "null_auc_hi": 0.5427,
+      "p_auc": 0.5814
+     },
+     "C": {
+      "auc": 0.4647,
+      "auc_lo": 0.4254,
+      "auc_hi": 0.507,
+      "null_auc_lo": 0.4591,
+      "null_auc_hi": 0.5421,
+      "p_auc": 0.953
+     },
+     "E": {
+      "auc": 0.5059,
+      "auc_lo": 0.459,
+      "auc_hi": 0.5487,
+      "null_auc_lo": 0.458,
+      "null_auc_hi": 0.5435,
+      "p_auc": 0.4176
+     },
+     "A": {
+      "auc": 0.4427,
+      "auc_lo": 0.3847,
+      "auc_hi": 0.4843,
+      "null_auc_lo": 0.4553,
+      "null_auc_hi": 0.5457,
+      "p_auc": 0.993
+     },
+     "N": {
+      "auc": 0.5031,
+      "auc_lo": 0.4735,
+      "auc_hi": 0.5414,
+      "null_auc_lo": 0.4549,
+      "null_auc_hi": 0.5401,
+      "p_auc": 0.4406
+     }
+    }
+   },
+   "pan15": {
+    "n": 294,
+    "label_kind": "self-report BFI-10 (continuous; N = -stable)",
+    "traits": {
+     "O": {
+      "auc": 0.5223,
+      "auc_lo": 0.4565,
+      "auc_hi": 0.5868,
+      "null_auc_lo": 0.4313,
+      "null_auc_hi": 0.5717,
+      "p_auc": 0.2587,
+      "r": 0.0184,
+      "r_lo": -0.074,
+      "r_hi": 0.1233
+     },
+     "C": {
+      "auc": 0.5438,
+      "auc_lo": 0.4744,
+      "auc_hi": 0.6148,
+      "null_auc_lo": 0.4273,
+      "null_auc_hi": 0.5684,
+      "p_auc": 0.1049,
+      "r": 0.1198,
+      "r_lo": 0.0116,
+      "r_hi": 0.2225
+     },
+     "E": {
+      "auc": 0.5427,
+      "auc_lo": 0.4678,
+      "auc_hi": 0.6199,
+      "null_auc_lo": 0.4339,
+      "null_auc_hi": 0.5686,
+      "p_auc": 0.1089,
+      "r": 0.0716,
+      "r_lo": -0.0513,
+      "r_hi": 0.1862
+     },
+     "A": {
+      "auc": 0.5423,
+      "auc_lo": 0.4719,
+      "auc_hi": 0.6114,
+      "null_auc_lo": 0.4319,
+      "null_auc_hi": 0.5687,
+      "p_auc": 0.1119,
+      "r": 0.0361,
+      "r_lo": -0.0885,
+      "r_hi": 0.1545
+     },
+     "N": {
+      "auc": 0.5713,
+      "auc_lo": 0.5112,
+      "auc_hi": 0.6352,
+      "null_auc_lo": 0.4357,
+      "null_auc_hi": 0.57,
+      "p_auc": 0.025,
+      "r": 0.2198,
+      "r_lo": 0.1231,
+      "r_hi": 0.3272
+     }
+    }
+   },
+   "vlogs": {
+    "n": 404,
+    "label_kind": "observer-rated impressions from watching the vlog (MTurk, continuous 1-7; N = -stability)",
+    "traits": {
+     "O": {
+      "auc": 0.4717,
+      "auc_lo": 0.4144,
+      "auc_hi": 0.5296,
+      "null_auc_lo": 0.4472,
+      "null_auc_hi": 0.5573,
+      "p_auc": 0.8501,
+      "r": 0.0214,
+      "r_lo": -0.0706,
+      "r_hi": 0.1168
+     },
+     "C": {
+      "auc": 0.6106,
+      "auc_lo": 0.5542,
+      "auc_hi": 0.6583,
+      "null_auc_lo": 0.4446,
+      "null_auc_hi": 0.5581,
+      "p_auc": 0.002,
+      "r": 0.2224,
+      "r_lo": 0.1332,
+      "r_hi": 0.3062
+     },
+     "E": {
+      "auc": 0.5598,
+      "auc_lo": 0.507,
+      "auc_hi": 0.6172,
+      "null_auc_lo": 0.4419,
+      "null_auc_hi": 0.5574,
+      "p_auc": 0.021,
+      "r": 0.0917,
+      "r_lo": 0.0091,
+      "r_hi": 0.1809
+     },
+     "A": {
+      "auc": 0.701,
+      "auc_lo": 0.6489,
+      "auc_hi": 0.7533,
+      "null_auc_lo": 0.4447,
+      "null_auc_hi": 0.5543,
+      "p_auc": 0.001,
+      "r": 0.3954,
+      "r_lo": 0.3158,
+      "r_hi": 0.4756
+     },
+     "N": {
+      "auc": 0.6077,
+      "auc_lo": 0.5548,
+      "auc_hi": 0.6653,
+      "null_auc_lo": 0.4422,
+      "null_auc_hi": 0.5535,
+      "p_auc": 0.001,
+      "r": 0.2721,
+      "r_lo": 0.1847,
+      "r_hi": 0.3592
+     }
+    }
+   }
+  },
+  "recipe_comparison_mean_auc": {
+   "a": {
+    "friends": 0.4824,
+    "pan15": 0.5445,
+    "vlogs": 0.5902
+   },
+   "b": {
+    "essays": 0.5228,
+    "friends": 0.5005,
+    "pan15": 0.4895,
+    "vlogs": 0.4963
+   },
+   "c1": {
+    "essays": 0.5162,
+    "friends": 0.494,
+    "pan15": 0.4997,
+    "vlogs": 0.4917
+   },
+   "c2": {
+    "essays": 0.5142,
+    "friends": 0.4894,
+    "pan15": 0.5269,
+    "vlogs": 0.5264
+   },
+   "d": {
+    "essays": 0.514,
+    "friends": 0.4728,
+    "pan15": 0.5051,
+    "vlogs": 0.4872
+   },
+   "d+c2": {
+    "essays": 0.5126,
+    "friends": 0.492,
+    "pan15": 0.513,
+    "vlogs": 0.5153
+   }
+  },
+  "decision": "Leave-one-domain-out over Essays, FriendsPersona, PAN 2015 Twitter and YouTube vlogs (docs/text_crossdomain.md). Best pooled recipe (style features, mean held-out AUC 0.514) did not beat this Essays-only model on the non-Essays domains (0.514 vs 0.539), so the model was kept unchanged.",
+  "doc": "docs/text_crossdomain.md"
+ },
+ "validity_by_source": {
+  "date": "2026-11-01",
+  "what": "Accuracy the reader states, by the KIND of writing it actually read. Items are sorted into kinds; a person's stated AUC per trait is the word-weighted mix over their kinds; the estimate is shrunk and its interval widened to that accuracy.",
+  "classify": {
+   "tweets": "TextItem.source in {x, twitter} or kind in {tweet, reply, retweet, quote}",
+   "essay_like": "kind in {essay, journal, diary, blog, letter}, or any other single item of at least essay_min_words words",
+   "other_prose": "everything else that is prose: Reddit comments, YouTube comments, short posts (searches are excluded earlier)"
+  },
+  "essay_min_words": 300,
+  "length_rule": "off-domain AUCs were measured on whole histories (PAN median 916 words). At a shorter length the off-domain lift above 0.5 is scaled by the in-domain curve's share of full-text lift at that length (capped at 1).",
+  "refuse_rule": "A trait whose held-out-domain AUC 95% CI includes 0.5 on EVERY held-out domain (Friends, PAN 2015, vlogs) is 'not shown' off-domain: it counts as AUC 0.5 for tweets and other prose, and the reader refuses it (usable=False, validity r = 0) unless at least refuse_below_shown_share of the person's words are essay-like.",
+  "refuse_below_shown_share": 0.5,
+  "not_shown": [
+   "O"
+  ],
+  "sources": {
+   "essay_like": {
+    "in_domain": true,
+    "basis": "in-domain: the card's own held-out test and length curve (student essays)"
+   },
+   "tweets": {
+    "in_domain": false,
+    "basis": "measured: PAN 2015, 294 Twitter users, self-report BFI-10, model never saw a tweet (text_crossdomain.md)",
+    "traits": {
+     "O": {
+      "auc": 0.5223,
+      "auc_lo": 0.4565,
+      "auc_hi": 0.5868,
+      "clear_of_chance": false,
+      "shown": false,
+      "from": "pan15",
+      "r": 0.0184
+     },
+     "C": {
+      "auc": 0.5438,
+      "auc_lo": 0.4744,
+      "auc_hi": 0.6148,
+      "clear_of_chance": false,
+      "shown": true,
+      "from": "pan15",
+      "r": 0.1198
+     },
+     "E": {
+      "auc": 0.5427,
+      "auc_lo": 0.4678,
+      "auc_hi": 0.6199,
+      "clear_of_chance": false,
+      "shown": true,
+      "from": "pan15",
+      "r": 0.0716
+     },
+     "A": {
+      "auc": 0.5423,
+      "auc_lo": 0.4719,
+      "auc_hi": 0.6114,
+      "clear_of_chance": false,
+      "shown": true,
+      "from": "pan15",
+      "r": 0.0361
+     },
+     "N": {
+      "auc": 0.5713,
+      "auc_lo": 0.5112,
+      "auc_hi": 0.6352,
+      "clear_of_chance": true,
+      "shown": true,
+      "from": "pan15",
+      "r": 0.2198
+     }
+    }
+   },
+   "other_prose": {
+    "in_domain": false,
+    "basis": "NOT measured on Reddit yet. Conservative stand-in: per trait, the lower of the two held-out domains made of a person's own words (PAN 2015 tweets, self-report; YouTube vlogs, spoken, observer-rated). FriendsPersona is left out because its text is screenwriters' dialogue for a fictional character, 30 words a scene; including it would put every trait at chance. PANDORA (Reddit, self-report) will replace this.",
+    "traits": {
+     "O": {
+      "auc": 0.4717,
+      "auc_lo": 0.4144,
+      "auc_hi": 0.5296,
+      "clear_of_chance": false,
+      "shown": false,
+      "from": "vlogs",
+      "r": 0.0214
+     },
+     "C": {
+      "auc": 0.5438,
+      "auc_lo": 0.4744,
+      "auc_hi": 0.6148,
+      "clear_of_chance": false,
+      "shown": true,
+      "from": "pan15",
+      "r": 0.1198
+     },
+     "E": {
+      "auc": 0.5427,
+      "auc_lo": 0.4678,
+      "auc_hi": 0.6199,
+      "clear_of_chance": false,
+      "shown": true,
+      "from": "pan15",
+      "r": 0.0716
+     },
+     "A": {
+      "auc": 0.5423,
+      "auc_lo": 0.4719,
+      "auc_hi": 0.6114,
+      "clear_of_chance": false,
+      "shown": true,
+      "from": "pan15",
+      "r": 0.0361
+     },
+     "N": {
+      "auc": 0.5713,
+      "auc_lo": 0.5112,
+      "auc_hi": 0.6352,
+      "clear_of_chance": true,
+      "shown": true,
+      "from": "pan15",
+      "r": 0.2198
+     }
+    }
+   }
+  }
+ }
+}

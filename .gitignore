@@ -1,0 +1,13 @@
+node_modules
+dist
+bench/data
+bench/out
+.DS_Store
+data/
+py/.venv/
+__pycache__/
+!py/src/aas/data/
+!py/tests/fixtures/exports/x/*/data/
+.env
+.env.*
+py/models/*/model.joblib

@@ -1,0 +1,35 @@
+{
+ "model": "claude-haiku-4-5-20251001",
+ "provider": "anthropic",
+ "prompt_version": "b5-ipip50-v1",
+ "budget_tokens": 1500,
+ "point_mean_auc_heldout": {
+  "llm": 0.6176007190578188,
+  "bow": 0.5579056234171154,
+  "combined": 0.6079553429356112,
+  "bow_full": 0.5552055061347351
+ },
+ "contrasts": {
+  "llm-bow": {
+   "delta": 0.05969509564070341,
+   "ci": [
+    0.02493443149586926,
+    0.09337602214461062
+   ]
+  },
+  "combined-bow": {
+   "delta": 0.050049719518495794,
+   "ci": [
+    0.03064188995789553,
+    0.06915867806416738
+   ]
+  }
+ },
+ "decision": "REPLACE",
+ "missing": {
+  "essays": {},
+  "pan15": {},
+  "vlogs": {}
+ },
+ "rule": "Pre-registered (docs/llm_rater.md), before any rating was obtained:\n  Primary metric: AUC against each dataset's own median split, mean over the 5 traits, averaged over the\n  bag-of-words model's HELD-OUT domains ['pan15', 'vlogs'] with each domain weighted equally.\n  Contrast: delta = that mean for the LLM minus that mean for bag-of-words on the SAME people and SAME text.\n  95% CI by paired bootstrap (2000 resamples of people within each dataset).\n  REPLACE  if delta(llm - bow) >= 0.03 and its CI excludes 0.\n  AUGMENT  else if delta(combined - bow) >= 0.03 and its CI excludes 0.\n  KEEP     otherwise (bag-of-words stays; the LLM is not adopted).\n  Essays (in-domain for bag-of-words), Pearson r and per-trait numbers are reported but do not enter the rule.\n  People whose LLM rating is missing (refusal or invalid reply twice) are dropped from ALL arms and counted."
+}
