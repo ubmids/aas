@@ -3,10 +3,11 @@
 // bench/data/lbusers/raw/<pseudonym>/. Resumable per user: state in raw/<pseudonym>/state.json.
 // Usage: npx tsx bench/lbusers/fetch.ts [users=360] [cap=60000] [workers=3]
 //        LB_SET=fresh npx tsx bench/lbusers/fetch.ts 400 60000 3   (the confirmation set)
+//        LB_SET=third npx tsx bench/lbusers/fetch.ts 400 60000 6   (the identity round's set)
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { gunzipSync, gzipSync } from 'node:zlib';
-import { DATA, RAW, RAW_MAIN, SET, get, pseud, readJson, writeJson } from './lib.js';
+import { DATA, RAW, RAW_FRESH, RAW_MAIN, SET, get, pseud, readJson, writeJson } from './lib.js';
 
 const nUsers = Number(process.argv[2] ?? 360);
 const CAP = Number(process.argv[3] ?? 60_000);   // most recent listens per user
@@ -19,7 +20,9 @@ const cands = readJson<Record<string, any>>(join(DATA, 'candidates.json'), {});
 // deterministic order: pseudonym, so the sample does not follow the graph walk
 // LB_SET=fresh: only users the first download never started (no folder under raw/)
 const users = Object.values(cands).filter((c) => c.ok).map((c) => c.user as string)
-  .filter((u) => SET !== 'fresh' || !existsSync(join(RAW_MAIN, pseud(u))))
+  .filter((u) => SET === 'main' || !existsSync(join(RAW_MAIN, pseud(u))))
+  // LB_SET=third: also none the fresh download started
+  .filter((u) => SET !== 'third' || !existsSync(join(RAW_FRESH, pseud(u))))
   .sort((a, b) => (pseud(a) < pseud(b) ? -1 : 1)).slice(0, nUsers);
 
 function trim(l: any) {

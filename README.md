@@ -50,11 +50,15 @@ The stage after that has started, and two results came back on 5 November 2026. 
 
 The second is a prediction game. After one session with each of three new artists, the model names the one that will still be in your rotation about 69% of the time, against one in three by chance and 37% to 46% for picking the most popular. It beats popularity for all 9 eligible Spotify people and 132 of 149 ListenBrainz listeners, which clears the bar set in advance. Much of that skill is simply the artist you played most in its first session, which does as well on Spotify and only a little worse on ListenBrainz. The other two games missed: calling which of the next 10 tracks you will skip beats the better simple rule for 9 of 12 people where 11 were needed, and naming next week's top five beats your last four weeks for only 56% of ListenBrainz listeners. The rules and every number are in `docs/GAME.md`.
 
+A third result came back on 6 November 2026, about how few sentences it takes to tell people apart. Choosing the three sentences together, instead of one at a time, avoids sentences that repeat each other, and a hold probability fitted on the first half allows for extreme people drifting back toward the middle. The bar set in advance was 75% in lineups of five, on a third set of 352 ListenBrainz listeners in neither earlier set. It failed: 68.8% (65.5% to 72.1%). The improvement itself held. On the same people and lineups the joint choice beat round two's rule by 7.2 points (4.2 to 10.4), and from three sentences it found one person among 352 13.6% of the time against 8.4% (chance is 0.3%). Round two's rule scored 61.5% on this crowd against 67.5% on the last one, so absolute levels move between population draws and the fair comparison is head to head on the same people. Artist lists alone still pick the person out of 352 94.0% of the time. Details are in `py/docs/identity.md`, with related work in `py/docs/related_work_identity.md`.
+
+`py/scripts/my_card.py` turns your own Spotify or ListenBrainz export into a listening card of these sentences, scored against aggregate norms in `py/src/aas/data/card_norms.json`. `py/docs/recognition_test.md` describes the test of whether people recognise their own card.
+
 The full account, including what failed, is in `docs/REPORT.md` and `docs/MATH.md` for the engine and `py/README.md` and `py/docs/MATH.md` for the Python side.
 
 ## What's next
 
-Personality scores this weak read like a horoscope for any one person, so the work now leans on what holds up: statements that are true of one person and of few others, and predictions people can check for themselves. Both have passed a test on data. The next test is with real people: shown their own reading next to other people's, can they pick out their own?
+Personality scores this weak read like a horoscope for any one person, so the work now leans on what holds up: statements that are true of one person and of few others, and predictions people can check for themselves. Both have passed a test on data, and the identity round showed that bars for these tests are better set as head to head gains on the same people than as absolute levels. The next test is with real people: shown their own card next to other people's, can they pick out their own? The protocol is in `py/docs/recognition_test.md`.
 
 ## Layout
 
@@ -103,7 +107,7 @@ The engine bench (`npm run bench`, `npm run lb3`) needs listening histories in `
 
 No dataset is redistributed. Each one has its own terms and some forbid sharing, so `DATA.md` says where to get each one instead.
 
-The listening histories behind the engine bench are not included, nor is any list of whose they are. The Spotify bench came from people who had published their own streaming history in public GitHub repositories, and the ListenBrainz bench from public ListenBrainz profiles. Even though the data was public, a list naming those people next to an analysis of their habits is not something to publish, so only aggregate results and pseudonymous summaries are kept (the music reader's norms in `py/src/aas/data/music_norms.json` are percentiles over 304 people, with no rows).
+The listening histories behind the engine bench are not included, nor is any list of whose they are. The Spotify bench came from people who had published their own streaming history in public GitHub repositories, and the ListenBrainz bench from public ListenBrainz profiles. Even though the data was public, a list naming those people next to an analysis of their habits is not something to publish, so only aggregate results and pseudonymous summaries are kept (the music reader's norms in `py/src/aas/data/music_norms.json` are percentiles over 304 people, and the card's norms in `py/src/aas/data/card_norms.json` are percentiles and correlations over 636, both with no rows).
 
 Three sets of model weights are left out, while their model cards (`card.json`) and the scripts that build them are kept:
 

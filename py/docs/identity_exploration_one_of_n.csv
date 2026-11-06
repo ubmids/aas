@@ -1,0 +1,20 @@
+matcher,k,top1,top5,rank_bits
+joint sentences,1,0.0356,0.1186,3.1275
+joint sentences,2,0.0940,0.2041,3.9466
+joint sentences,3,0.1326,0.2498,4.5516
+joint sentences,4,0.1582,0.3077,5.0269
+joint sentences,5,0.1924,0.3655,5.4207
+joint sentences,6,0.2155,0.3944,5.6834
+joint sentences,7,0.2400,0.4255,5.8856
+independent sentences,1,0.0223,0.0896,3.4673
+independent sentences,2,0.0459,0.1554,4.1257
+independent sentences,3,0.0665,0.2009,4.4958
+independent sentences,4,0.0879,0.2493,4.7982
+independent sentences,5,0.1033,0.2729,4.9212
+independent sentences,6,0.1253,0.3009,5.0654
+independent sentences,7,0.1353,0.3153,5.1624
+percentile_mad,all,0.4450,0.6463,7.2012
+z_euclid,all,0.4025,0.6289,7.1000
+z_diag_noise,all,0.4324,0.6431,7.1891
+z_mahalanobis,all,0.5031,0.6808,7.3669
+items_hellinger,all,0.9497,0.9733,9.1339

@@ -37,6 +37,7 @@ class Play:
     shuffle: bool | None = None
     source: str = "spotify"
     country: str | None = None   # where it was played (Spotify conn_country), for local time
+    album: str | None = None     # release name where the export has one
 
 
 @dataclass

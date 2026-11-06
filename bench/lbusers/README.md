@@ -151,3 +151,18 @@ listens faster than listening, 5 for 500+ listens a day, 2 for scripted pacing, 
 timestamps, one track dominating, too few listens and under 12 months (some hit more than one rule),
 none for the single-artist rule. 477,608 duplicate scrobbles and 545 impossible timestamps were
 removed; the kept set holds 16,843,110 listens, median 57,640 per user over a median 1,620 days.
+
+## The third set (identity round)
+
+`LB_SET=third` selects a third download, used to confirm the identity round (`py/docs/identity.md`)
+on people neither earlier round looked at. On 5 November 2026 the walk was continued again
+(`discover.ts 1250`, same rules) until 1,300 accounts qualified. The third set is the first 400
+qualifying accounts, in pseudonym order, that neither the first nor the fresh download ever started:
+
+```
+LB_SET=third npx tsx bench/lbusers/fetch.ts 400 60000 6
+LB_SET=third npx tsx bench/lbusers/normalise.ts
+```
+
+It shares the salt and `candidates.json` and keeps its pages, plays and summary in `raw_third/`,
+`plays_third/` and `summary_third.json`. Cleaning is unchanged, including the single-artist rule.

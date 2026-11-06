@@ -1,9 +1,9 @@
 """Statements round 2 (py/docs/statements.md, "Round 2"): 57 families, the frozen v2 selection rule,
 the lineup test, the fingerprint matcher, the stable-reading proxy and the Barnum control.
 
-    cd ~/Desktop/aas/py && uv run python scripts/run_statements_v2.py old     # frozen v2 on round 1's listeners
-    cd ~/Desktop/aas/py && uv run python scripts/run_statements_v2.py fresh   # the confirmation run (once)
-    cd ~/Desktop/aas/py && uv run python scripts/run_statements_v2.py cards   # redraw the cards from its cache
+    cd py && uv run python scripts/run_statements_v2.py old     # frozen v2 on round 1's listeners
+    cd py && uv run python scripts/run_statements_v2.py fresh   # the confirmation run (once)
+    cd py && uv run python scripts/run_statements_v2.py cards   # redraw the cards from its cache
 
 Reads the local, gitignored benches: ../bench/data/lbusers/plays (round 1's listeners) and
 ../bench/data/lbusers/plays_fresh (the confirmation set). Per-person values go to the system temp

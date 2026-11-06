@@ -1,8 +1,8 @@
 """The "only you" statement engine on the 304 ListenBrainz listeners: coverage, stability, the
 pre-registered lineup test and the Barnum control (py/docs/statements.md).
 
-    cd ~/Desktop/aas/py && uv run python scripts/run_statements.py values   # measure families (cached)
-    cd ~/Desktop/aas/py && uv run python scripts/run_statements.py all      # everything, writes results
+    cd py && uv run python scripts/run_statements.py values   # measure families (cached)
+    cd py && uv run python scripts/run_statements.py all      # everything, writes results
 
 Reads the local, gitignored bench (../bench/data/lbusers/plays). People and their split are the
 music reader's 304 (scripts/build_music_norms.py person_arrays: 2,000+ listens, last 8 weeks held

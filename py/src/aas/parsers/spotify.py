@@ -60,6 +60,7 @@ def parse(path: str | Path) -> Person:
                         reason_end=r.get("reason_end"),
                         shuffle=_bool(r.get("shuffle")),
                         country=r.get("conn_country"),
+                        album=r.get("master_metadata_album_album_name") or None,
                     ))
             p.notes.append("spotify: extended streaming history (whole account lifetime, "
                            "with skips, start/end reasons and shuffle)")

@@ -11,9 +11,12 @@ export const DATA = join(import.meta.dirname, '..', 'data', 'lbusers');
 // LB_SET=fresh selects the confirmation set (round 2 of the statements lane): listeners found by the
 // same walk who are not in the first download. It shares the salt and the candidate list, and keeps
 // its pages and plays in raw_fresh/ and plays_fresh/ so the first bench is never touched.
-export const SET = process.env.LB_SET === 'fresh' ? 'fresh' : 'main';
-const SUFFIX = SET === 'fresh' ? '_fresh' : '';
+// LB_SET=third selects the identity round's confirmation set (py/docs/identity.md): listeners found by
+// the same walk who are in neither of the first two downloads, kept in raw_third/ and plays_third/.
+export const SET = process.env.LB_SET === 'fresh' ? 'fresh' : process.env.LB_SET === 'third' ? 'third' : 'main';
+const SUFFIX = SET === 'main' ? '' : '_' + SET;
 export const RAW_MAIN = join(DATA, 'raw');
+export const RAW_FRESH = join(DATA, 'raw_fresh');
 export const RAW = join(DATA, 'raw' + SUFFIX);
 export const PLAYS = join(DATA, 'plays' + SUFFIX);
 export const SUMMARY = join(DATA, 'summary' + SUFFIX + '.json');
