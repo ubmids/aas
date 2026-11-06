@@ -122,7 +122,7 @@ A game and data set is product grade when all three of these hold:
 2. the lower end of the 95% Wilson interval for that share is above 50%;
 3. the Holm-adjusted sign-test p is below 0.05, with more wins than losses.
 
-With 13 people the first two together need 11 wins of 13 (11 of 13 has a Wilson lower bound of 0.58; 10 of 13 sits at 0.50). With 12 eligible people they need 10. A small consistent effect can therefore fail the bar on Spotify and still be real. The ListenBrainz rows are the ones with the power to show it.
+With 13 people the first two together need 11 wins of 13 (11 of 13 has a Wilson lower bound of 0.58; 10 of 13 sits at 0.50). With 12 eligible people the Wilson bound alone needs 10, but the sign test must also pass after Holm: 10 of 12 gives one-sided p 0.019, which fails once multiplied across the comparisons, and 11 of 12 gives 0.003, which passes. So 12 eligible people need 11 wins, the number used in the results below. A small consistent effect can therefore fail the bar on Spotify and still be real. The ListenBrainz rows are the ones with the power to show it.
 
 A game that misses the bar is reported as missing it. No threshold, eligibility rule or baseline is changed after the first run. If a bug is found after the run, the fix and both sets of numbers are reported.
 
