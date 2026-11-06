@@ -526,7 +526,7 @@ All are in `paper/figures/`, drawn by `make_figures.py` from the CSVs in `py/doc
 
 ## Reproducing
 
-The code is in the private repository `aas`, with the identity round in
+The code is public at [github.com/ubmids/aas](https://github.com/ubmids/aas), with the identity round in
 `py/src/aas/statements/identity.py` and `py/scripts/run_identity.py` and data collection in
 `bench/lbusers/`. The pre-registrations are in `py/docs/statements.md` and `py/docs/identity.md`, each
 committed before its data was measured. Every round 3 number is in `py/docs/identity_results.json`.
